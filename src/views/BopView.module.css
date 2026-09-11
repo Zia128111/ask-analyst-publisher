@@ -1,0 +1,59 @@
+/*
+ * BOP lays its report out as the benchmark does: the sheet at SEVEN grid
+ * columns and the chart at FIVE beside it — the benchmark's 7:5 split
+ * (Bootstrap's col-md-7 and col-md-5) on the design system's twelve-column
+ * grid, 1300px in all. The toolbar spans both, so the masthead switch sits on
+ * the sheet's start edge and Download on the chart's end edge. The chart
+ * panel is centred against the sheet's height, as there.
+ *
+ * A size container, so the layout follows the room it has, not the screen:
+ * narrower than the full grid, the chart goes under the sheet and the
+ * toolbar, the sheet and the chart share the sheet's seven-column measure.
+ * The downloads are the sheet alone, from its own off-screen copy, so this
+ * layout never reaches them.
+ */
+.frame {
+  --bop-sheet: calc(var(--ask-grid-column) * 7 + var(--ask-grid-gutter) * 6);
+  --bop-chart: calc(var(--ask-grid-column) * 5 + var(--ask-grid-gutter) * 4);
+  --bop-grid: calc(var(--bop-sheet) + var(--ask-grid-gutter) + var(--bop-chart));
+
+  container: bop-report / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-4);
+}
+
+.frame .toolbar {
+  max-inline-size: var(--bop-grid);
+}
+
+.report {
+  display: grid;
+  grid-template-columns: var(--bop-sheet) var(--bop-chart);
+  align-items: center;
+  justify-content: center;
+  gap: var(--ask-space-6) var(--ask-grid-gutter);
+  inline-size: 100%;
+  max-inline-size: var(--bop-grid);
+  margin-inline: auto;
+}
+
+/* The sheet's grid cell. The view holds the sheet at seven columns at every
+   text size (BopView.tsx), so larger text wraps the labels rather than
+   widening the sheet into the chart. */
+.sheetCell {
+  min-inline-size: 0;
+}
+
+/* Narrower than the full grid (1300px, which a container query cannot read
+   from a custom property). */
+@container bop-report (max-width: 1299px) {
+  .report {
+    grid-template-columns: minmax(0, 1fr);
+    max-inline-size: var(--bop-sheet);
+  }
+
+  .frame .toolbar {
+    max-inline-size: var(--bop-sheet);
+  }
+}

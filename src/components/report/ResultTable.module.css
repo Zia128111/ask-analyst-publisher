@@ -1,0 +1,118 @@
+/*
+ * The design system's Table theme supplies the brand-blue rules, tabular
+ * figures and bidi-isolated numeric cells. This file reshapes it to the
+ * Latest Result benchmark: a tinted header between two thin rules (not the
+ * theme's thick one), labels at the inline-start and figures at the
+ * inline-end, totals bold across the row, and the current periods tinted
+ * down the table. The first and last cells sit flush with the sheet's edges,
+ * so the labels line up under the ticker and the last figures under the
+ * logo, as in the benchmark.
+ *
+ * The Report style reaches it through custom properties (see reportVars),
+ * each read with the design-system token as its fallback:
+ *   --report-text           the size of every cell, header included
+ *   --report-rule           every rule
+ *   --report-fill           the header fill, with --report-on-fill on it
+ *   --report-highlight      the current-period cells, with
+ *                           --report-on-highlight on it; unset, both follow
+ *                           the fill, as in the benchmark, where the header
+ *                           and the current columns share one tint
+ *
+ * Selectors are one step heavier than the theme's (`> thead > tr > th`), so
+ * they win on specificity rather than on stylesheet order.
+ */
+
+.table > thead > tr > th {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  border-block-start: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  vertical-align: middle;
+  text-align: end;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  font-size: var(--report-text, var(--ask-font-xs));
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--report-on-fill, var(--ask-text-primary));
+}
+
+/* Every row closes on a rule, the last one included. Single-line cells take
+   the snug leading, as on the MTS sheet. */
+.table > tbody > tr > :is(td, th) {
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-size: var(--report-text, var(--ask-font-xs));
+  font-weight: 400;
+  line-height: var(--ask-leading-snug);
+}
+
+/* Figures never break; a label may wrap when the Report style's larger text
+   leaves it too little room beside ten columns of figures. */
+.table > tbody > tr > td[data-numeric] {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.table > thead > tr > th.pin,
+.table > tbody > tr > th.pin {
+  text-align: start;
+  white-space: normal;
+}
+
+/* Totals and subtotals: bold from the label to the last figure. */
+.table > tbody > tr[data-bold] > :is(td, th) {
+  font-weight: 700;
+}
+
+.table > tbody > tr > td[data-current] {
+  background: var(--report-highlight, var(--report-fill, var(--ask-bg-brand-subtle)));
+  color: var(--report-on-highlight, var(--report-on-fill, var(--ask-text-primary)));
+}
+
+/* Flush with the sheet's edges: the labels under the ticker, the last
+   column's figures under the logo. */
+.table > :is(thead, tbody) > tr > :first-child {
+  padding-inline-start: 0;
+}
+
+.table > :is(thead, tbody) > tr > :last-child {
+  padding-inline-end: 0;
+}
+
+/*
+ * The pinned labels. Opaque, or figures scroll visibly underneath them.
+ * Logical inset, so in the Arabic build they pin to the right edge with no
+ * second rule.
+ */
+.pin {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--ask-bg-page);
+}
+
+.table > thead > tr > th.pin {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  z-index: 2;
+}
+
+/*
+ * Optical centring, as on the MTS sheet: each cell's line box trimmed to
+ * cap-height and baseline, with even padding, so figures sit centred between
+ * the rules in whichever typeface the Report style picks. Where the browser
+ * cannot trim, the compact density's padding stays. The `.scroller` prefix
+ * outweighs the design system's density rule.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+  .scroller .table > tbody > tr > :is(td, th),
+  .scroller .table > thead > tr > th {
+    text-box: trim-both cap alphabetic;
+    padding-block: var(--ask-space-2);
+  }
+}
+
+/* The row hover paints the <tr>; the pinned label's own background would
+   hide it there, so the label follows the row. */
+.table > tbody > tr:hover > th.pin {
+  background: var(--ask-bg-hover);
+}

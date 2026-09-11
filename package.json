@@ -1,0 +1,46 @@
+{
+  "name": "ask-analyst-publisher",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "oxlint src app",
+    "typecheck": "tsc --noEmit",
+    "verify:icons": "node scripts/verify-icons.mjs",
+    "verify:rtl": "node scripts/verify-rtl.mjs",
+    "verify": "npm run verify:icons && npm run verify:rtl",
+    "verify:a11y": "npx --yes @axe-core/cli http://localhost:3000/sign-in http://localhost:3000/sign-up http://localhost:3000/forgot-password --exit --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa"
+  },
+  "dependencies": {
+    "@akseer/ask-analyst-design-system": "github:Knowbridge-UI/Design-system#v1.3.3",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/open-sans": "^5.3.0",
+    "@fontsource-variable/roboto": "^5.3.0",
+    "@fontsource-variable/source-sans-3": "^5.3.0",
+    "@fontsource-variable/source-serif-4": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@mantine/core": "^9.6.0",
+    "@mantine/dates": "^9.6.0",
+    "@mantine/form": "^9.6.0",
+    "@mantine/hooks": "^9.6.0",
+    "@mantine/notifications": "^9.6.0",
+    "dayjs": "^1.11.23",
+    "fflate": "^0.8.3",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^4.2.1",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-google-charts": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "oxlint": "^1.79.0",
+    "typescript": "~6.0.2"
+  }
+}

@@ -1,0 +1,40 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ask-space-1);
+  min-block-size: var(--ask-control-md);
+  padding: var(--ask-space-1);
+  border-radius: var(--ask-radius-md);
+  color: var(--ask-text-secondary);
+  transition: background-color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.trigger:hover {
+  background: var(--ask-bg-hover);
+  color: var(--ask-text-link);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-3);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.name {
+  font-size: var(--ask-font-sm);
+  font-weight: 600;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+.org {
+  font-size: var(--ask-font-xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}

@@ -1,0 +1,55 @@
+/*
+ * The design system's chrome-toggle treatment (its ColorSchemeToggle look):
+ * muted track, surface pill, ink label. For switches that change how
+ * something is presented rather than which data it shows — the masthead
+ * switch above a report, the table-size setting in the account drawer —
+ * where the system's brand-blue indicator would claim too much.
+ *
+ * The selectors reach Mantine's slot classes because the theme already
+ * assigns this control's classNames, and they need the extra weight to beat
+ * the theme's brand-indicator rules.
+ */
+.root {
+  background: var(--ask-bg-muted);
+  border-radius: var(--ask-radius-md);
+  padding: var(--ask-space-1);
+}
+
+.root :global(.mantine-SegmentedControl-indicator) {
+  background: var(--ask-bg-surface);
+  border: var(--ask-border-thin) solid var(--ask-border-subtle);
+  border-radius: var(--ask-radius-sm);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.root :global(.mantine-SegmentedControl-label) {
+  padding-inline: var(--ask-space-3);
+  font-size: var(--ask-font-xs);
+  font-weight: 500;
+  color: var(--ask-text-secondary);
+}
+
+/* Optical centring of the labels (see MtsTable.module.css): the inner label is
+   a flex item, so trimming its line box centres the capitals in the pill. */
+.root :global(.mantine-SegmentedControl-innerLabel) {
+  text-box: trim-both cap alphabetic;
+}
+
+/* Ink on the surface pill — not the white the theme uses on a brand fill. */
+.root :global(.mantine-SegmentedControl-label[data-active]),
+.root :global(.mantine-SegmentedControl-label[data-active]:hover) {
+  font-weight: 700;
+  color: var(--ask-text-primary);
+}
+
+/* A label that can be long — a company's name — stops at a readable width.
+   Visual only: the radio keeps the whole name as its accessible name. It
+   clips, so it is its own formatting context and trims its own line box. */
+.truncate {
+  display: block;
+  max-inline-size: 16em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
+}

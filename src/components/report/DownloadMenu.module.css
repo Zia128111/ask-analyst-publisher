@@ -1,0 +1,14 @@
+/*
+ * Optical centring. Lato's metrics leave more room under the baseline than
+ * above the capitals, so a label centred by its line box rides high. Trimming
+ * the line box to cap-height and baseline makes the button centre the
+ * capitals themselves. Ignored where unsupported, which leaves the old look.
+ */
+.label {
+  text-box: trim-both cap alphabetic;
+}
+
+.extension {
+  font-size: var(--ask-font-2xs);
+  color: var(--ask-text-tertiary);
+}

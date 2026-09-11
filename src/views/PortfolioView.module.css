@@ -1,0 +1,42 @@
+/*
+ * The report's second part, under the sheet, as the benchmark lays it out:
+ * the second table at FOUR grid columns (the benchmark's 397px) and the chart
+ * across the other EIGHT beside it (793px), on the sheet's full grid, 1300px.
+ * The table's top rows line up with the chart's top.
+ *
+ * A size container, so the layout follows the room it has: with less than
+ * the table, a gutter and a five-column chart need (970px), the chart goes
+ * under the table. The table then keeps to the seven-column sheet's measure
+ * rather than stretching four columns of figures across the room.
+ */
+.frame {
+  container: pi-summary / inline-size;
+  inline-size: 100%;
+  max-inline-size: var(--sheet-measure);
+  margin-inline: auto;
+}
+
+.summary {
+  --pi-table: calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
+
+  display: grid;
+  grid-template-columns: var(--pi-table) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ask-space-6) var(--ask-grid-gutter);
+}
+
+.tableCell {
+  min-inline-size: 0;
+}
+
+/* 4 × 90 + 3 × 20, a gutter, and 5 × 90 + 4 × 20: 970px, which a container
+   query cannot read from custom properties. */
+@container pi-summary (max-width: 969px) {
+  .summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tableCell {
+    max-inline-size: calc(var(--ask-grid-column) * 7 + var(--ask-grid-gutter) * 6);
+  }
+}

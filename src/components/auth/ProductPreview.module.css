@@ -1,0 +1,114 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-6);
+  /* Stretches to the panel's foot and past it (the container's negative
+     margin), so the bottom edge is always clipped and the card reads as
+     continuing below the fold. */
+  flex: 1;
+  padding: var(--ask-space-6);
+}
+
+@media (min-width: 1280px) {
+  .card {
+    padding: var(--ask-space-8);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+}
+
+.kicker {
+  font-size: var(--ask-font-2xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ask-text-link);
+}
+
+.greeting {
+  font-size: var(--ask-font-lg);
+  font-weight: 600;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+/* Three tiles that wrap as the card narrows, rather than a fixed row that
+   would crush the figures at the lg breakpoint. The minimum is one grid
+   column plus a step of space, so it is derived rather than picked. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(calc(var(--ask-grid-column) + var(--ask-space-10)), 1fr)
+  );
+  gap: var(--ask-space-3);
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+  padding: var(--ask-space-3) var(--ask-space-4);
+  border: var(--ask-border-thin) solid var(--ask-border-subtle);
+  border-radius: var(--ask-radius-lg);
+  background: var(--ask-bg-subtle);
+}
+
+.statLabel {
+  font-size: var(--ask-font-2xs);
+  font-weight: 600;
+  color: var(--ask-text-tertiary);
+  white-space: nowrap;
+}
+
+.statValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ask-space-2);
+  margin: 0;
+  font-size: var(--ask-font-xl);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+/* Colour is one of three signals; the glyph and the hidden word are the other
+   two. The token pairs are the design system's direction colours. */
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ask-space-1);
+  font-size: var(--ask-font-2xs);
+  font-weight: 600;
+  color: var(--ask-text-tertiary);
+}
+
+.delta[data-direction='up'] {
+  color: var(--ask-positive-text);
+}
+
+.delta[data-direction='down'] {
+  color: var(--ask-negative-text);
+}
+
+.table {
+  /* The system's brand-blue rules do the work; the card adds nothing. */
+  margin-block-start: var(--ask-space-1);
+}
+
+.titleCell {
+  max-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sectorCell {
+  white-space: nowrap;
+  color: var(--ask-text-secondary);
+}

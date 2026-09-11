@@ -1,0 +1,40 @@
+/*
+ * The sheet's measure (seven grid columns, or the eight or nine the Report
+ * style's larger text sizes take — `--report-columns`, inherited from the
+ * view) plus a one-step margin, so the image has a white border. Fixed-
+ * position boxes add nothing to the page's scrollable area, so a 782px stage
+ * on a 375px phone causes no sideways scroll; it is transparent and behind
+ * the page throughout. `--sheet-grow`, set only for the moment of a capture
+ * on a `fit` stage whose table is wider than its sheet, widens the stage
+ * and the sheet alike (ReportSheet.module.css).
+ */
+.stage {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: -1;
+  inline-size: calc(
+    var(--ask-grid-column) * var(--report-columns, 7) + var(--ask-grid-gutter) *
+      (var(--report-columns, 7) - 1) + 2 * var(--ask-space-4) + var(--sheet-grow, 0px)
+  );
+  padding: var(--ask-space-4);
+  background: var(--ask-bg-page);
+  color: var(--ask-text-primary);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/*
+ * Nothing on the stage scrolls. The stage is wide enough for every column,
+ * but the image renderer copies each element's height as a fixed number and
+ * then lays the text out again, and a few typefaces at the larger sizes come
+ * out a fraction of a pixel taller the second time. In a scroll region that
+ * fraction is overflow: a scrollbar appears, takes its width from the table,
+ * a second scrollbar follows, and the picture has both, with the last row
+ * cut off. Measured with Source Serif 4 at 18px. Visible overflow just lets
+ * the fraction be.
+ */
+.stage :global(.ask-scroll-x),
+.stage [role='region'] {
+  overflow: visible;
+}

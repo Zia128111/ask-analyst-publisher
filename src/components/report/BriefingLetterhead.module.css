@@ -1,0 +1,59 @@
+/*
+ * The benchmark's header, measured on the live page: the date (16px) and the
+ * 65px logo on one line, 90px of space, then the 22px bold title between two
+ * rules. Here on the system's steps: the logo box 64px (space-16; the box
+ * rules are Masthead.module.css's, `--letterhead-block`), 88px of space
+ * (space-20 + space-2), the title 24px (font-xl) — the type scale's step
+ * over 22px — with a space-2 of room above and below it inside the rules.
+ *
+ * Colours: the rules the Report style's border colour, else the brand blue
+ * every table rule is; the title the view's `--briefing-accent` (the chosen
+ * border colour where it reads as text on white), else the system's blue for
+ * text.
+ */
+.letterhead {
+  --letterhead-block: var(--ask-space-16);
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ask-space-20) + var(--ask-space-2));
+}
+
+/* The date level with the logo's top, as in the benchmark. `start`, not
+   `flex-start`: wrap-reverse (which puts the logo ABOVE the date on a sheet
+   too narrow for both, as on every letterhead) turns flex-start into the
+   bottom. */
+.top {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--ask-space-2) var(--ask-space-4);
+}
+
+.date {
+  margin: 0;
+  font-size: var(--ask-font-sm);
+  font-weight: 500;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+.title {
+  margin: 0;
+  padding-block: var(--ask-space-2);
+  border-block: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-size: var(--ask-font-xl);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--briefing-accent, var(--ask-text-link));
+}
+
+/* Optically centred between the rules, in whichever face the Report style
+   picks, as the bands of the other sheets are. */
+@supports (text-box: trim-both cap alphabetic) {
+  .titleText {
+    display: block;
+    text-box: trim-both cap alphabetic;
+  }
+}

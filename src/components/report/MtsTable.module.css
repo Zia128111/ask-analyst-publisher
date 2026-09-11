@@ -1,0 +1,114 @@
+/*
+ * The design system's Table theme supplies the brand-blue rules, the 2px
+ * header rule, tabular figures and bidi-isolated numeric cells. This file
+ * reshapes it to the benchmark sheet: a plain header row between two blue
+ * rules, title-case labels, and figures centred under their headings.
+ *
+ * The Report style reaches it through custom properties (see reportVars),
+ * each read with the design-system token as its fallback:
+ *   --report-text     the size of every cell, header included
+ *   --report-rule     every rule: the header's two and the row rules
+ *   --report-fill     the header fill
+ *   --report-on-fill  the header's text, ink or white for that fill
+ *
+ * Selectors are one step heavier than the theme's (`> thead > tr > th`), so
+ * they win on specificity rather than on stylesheet order.
+ */
+
+/* The benchmark's header: the tinted header fill, bold ink rather than
+   uppercase grey, and a rule above as well as the thick one below. */
+.table > thead > tr > th {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  border-block-start: var(--ask-border-thick) solid var(--report-rule, var(--ask-border-brand));
+  border-block-end: var(--ask-border-thick) solid var(--report-rule, var(--ask-border-brand));
+  vertical-align: middle;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  font-size: var(--report-text, var(--ask-font-xs));
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--report-on-fill, var(--ask-text-primary));
+}
+
+/* Each half of a two-line label keeps to its own line. */
+.line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* The ticker is left-aligned in both the header and the body. */
+.table > thead > tr > th.pin,
+.table > tbody > tr > th.pin {
+  text-align: start;
+}
+
+/*
+ * Figures centred under their headings, as in the benchmark. They stay
+ * tabular and bidi-isolated (the theme's rule), so an Arabic build still
+ * reads "12.7%" rather than "%12.7".
+ */
+.table > tbody > tr > td[data-numeric],
+.table > tbody > tr > td.tag {
+  text-align: center;
+}
+
+/* The benchmark sets the ticker in the same weight as the figures. */
+.table > tbody > tr > th.pin {
+  font-weight: 500;
+}
+
+/* Every row closes on a rule, the last one included. Single-line cells take
+   the design system's snug leading rather than the 1.4 meant for wrapping
+   text: two pixels a row, forty over the table. */
+.table > tbody > tr > :is(td, th) {
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-size: var(--report-text, var(--ask-font-xs));
+  line-height: var(--ask-leading-snug);
+}
+
+/*
+ * The pinned ticker. Opaque, or figures scroll visibly underneath it. Logical
+ * inset, so in the Arabic build it pins to the right edge with no second rule.
+ */
+.pin {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--ask-bg-page);
+}
+
+/* The pinned header cell sits above the body cells as they scroll under it,
+   in the same fill as the rest of the header. */
+.table > thead > tr > th.pin {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  z-index: 2;
+}
+
+/*
+ * Optical centring. A font's metrics can leave more room under the baseline
+ * than above the capitals — Lato's did, so a figure centred by its line box
+ * rode high: 6.5px above the capitals against 9px below the baseline in a
+ * body row, and 2px worse in the header. Trimming each cell's line box to
+ * cap-height and baseline, with even padding, centres the figures between the
+ * rules exactly, in whichever typeface the Report style picks. Where the
+ * browser cannot trim, the compact density's padding stays and the table
+ * looks as it did.
+ *
+ * The `.scroller` prefix outweighs the design system's density rule, which
+ * would otherwise tie on specificity.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+  .scroller .table > tbody > tr > :is(td, th),
+  .scroller .table > thead > tr > th {
+    text-box: trim-both cap alphabetic;
+    padding-block: var(--ask-space-2);
+  }
+}
+
+/* The row hover paints the <tr>; the pinned cell's own background would hide
+   it, so the pinned cell follows the row. */
+.table > tbody > tr:hover > th.pin {
+  background: var(--ask-bg-hover);
+}

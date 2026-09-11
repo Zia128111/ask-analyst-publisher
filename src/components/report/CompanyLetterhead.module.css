@@ -1,0 +1,134 @@
+/*
+ * The letterhead's text block, as fixed heights from the type scale, so the
+ * masthead's logo box (Masthead.module.css) can be sized to match it exactly:
+ *   ticker   16px × 1.25   20px
+ *   gap       4px
+ *   name     12px × 1.4    16.8px
+ *   units    12px × 1.4    16.8px                                 = 57.6px
+ * Declared on the letterhead, so it outranks the band letterhead's value set
+ * on the sheet.
+ *
+ * The identity takes three grid columns, so the price starts on the fourth,
+ * where the benchmark puts it; the logo keeps to the inline-end. As on the
+ * band letterhead, nothing is squeezed for the logo: on a sheet too narrow
+ * for all three, the logo wraps ABOVE the text rather than narrowing it.
+ */
+.letterhead {
+  --letterhead-block: calc(
+    var(--ask-font-sm) * var(--ask-leading-snug) + 2 * var(--ask-font-2xs) *
+      var(--ask-leading-normal) + var(--ask-space-1)
+  );
+
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  gap: var(--ask-space-2) var(--ask-grid-gutter);
+  padding-block-end: var(--ask-space-3);
+}
+
+.identity {
+  flex: 0 0 calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter) * 2);
+  min-inline-size: 0;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+  margin: 0;
+}
+
+.ticker {
+  font-size: var(--ask-font-sm);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+.name,
+.units {
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  font-weight: 400;
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-secondary);
+}
+
+.price {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+}
+
+.priceLabel,
+.date {
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+}
+
+.priceLabel {
+  color: var(--ask-text-primary);
+}
+
+.date {
+  color: var(--ask-text-secondary);
+}
+
+.priceLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ask-space-2);
+  margin: 0;
+}
+
+.close {
+  font-size: var(--ask-font-sm);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+/* The arrow, the word and the figures in the design system's direction
+   colours; the icon sits on the figures' line. */
+.change {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: var(--ask-space-1);
+  font-size: var(--ask-font-2xs);
+  font-weight: 700;
+  line-height: var(--ask-leading-normal);
+}
+
+.change[data-direction='up'] {
+  color: var(--ask-positive-text);
+}
+
+.change[data-direction='down'] {
+  color: var(--ask-negative-text);
+}
+
+.change[data-direction='flat'] {
+  color: var(--ask-text-tertiary);
+}
+
+/* On a phone-width sheet the logo goes first, at the inline-end, and the
+   identity and price follow in reading order. A container query, so the
+   full-width export copy never stacks. */
+@container sheet (max-width: 639px) {
+  .letterhead {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .letterhead > :last-child {
+    order: -1;
+  }
+
+  .identity {
+    flex-basis: auto;
+  }
+}

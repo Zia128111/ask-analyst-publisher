@@ -1,0 +1,38 @@
+/*
+ * `container.grid` is the width of the GRID, not of the box around it, so the
+ * inline padding is added on top — the same arithmetic as the header's
+ * width="grid", which is what puts the logo and the first chip on one edge.
+ */
+/* A column at least the viewport tall, so on a short page (a publication not
+   built yet) the footer sits at the foot of the screen, not halfway up it.
+   The header stays sticky: its scroll container is still the viewport. */
+.shell {
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  inline-size: 100%;
+  max-inline-size: calc(var(--ask-container-grid) + 2 * var(--ask-space-4));
+  margin-inline: auto;
+  padding-inline: var(--ask-space-4);
+  padding-block: var(--ask-space-4) var(--ask-space-12);
+}
+
+.main {
+  padding-block-start: var(--ask-space-3);
+}
+
+.footer {
+  border-block-start: var(--ask-border-thin) solid var(--ask-border-subtle);
+  background: var(--ask-bg-subtle);
+}
+
+.footerInner {
+  max-inline-size: calc(var(--ask-container-grid) + 2 * var(--ask-space-4));
+  margin-inline: auto;
+  padding-inline: var(--ask-space-4);
+  padding-block: var(--ask-space-6);
+}

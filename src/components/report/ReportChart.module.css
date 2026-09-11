@@ -1,0 +1,49 @@
+/*
+ * A chart panel beside or under a report sheet (BOP, Portfolio Investment),
+ * or inside it (Remittance):
+ * its title centred over the chart in bold, as in the BOP benchmark, the
+ * chart, and "Powered by" with the Ask Analyst logo at the inline-end under
+ * it, as in both. The Report style's typeface reaches the title and the
+ * badge's words; Google draws the axes in it too (the view passes the
+ * family name).
+ */
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-2);
+  margin: 0;
+  min-inline-size: 0;
+  font-family: var(--report-font, var(--mantine-font-family));
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ask-font-xs);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+/* The units over a chart's two value axes, one at each side (Remittance's:
+   "USD mn" over the bars' axis, "%" over the line's), as the benchmark
+   prints them; the sides follow the reading direction, as the axes do. */
+.axes {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-tertiary);
+}
+
+.powered {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ask-space-2);
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}

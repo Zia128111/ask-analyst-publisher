@@ -1,0 +1,145 @@
+/*
+ * The sheet is SEVEN COLUMNS of the twelve-column grid, 7 × 90 + 6 × 20 =
+ * 750px, derived from the grid tokens. A report is a document with its own
+ * measure: spread across the full 1300px, seven columns of figures sit so far
+ * apart that the eye loses the row between the ticker and the value. The
+ * Report style's larger text sizes widen it by a column per step (8 and 9,
+ * `--report-columns`), so bigger figures still fit without scrolling.
+ *
+ * It is a size container, so the letterhead responds to the SHEET's width,
+ * not the screen's: the off-screen copy the downloads are made from is always
+ * the full measure, and lays out as the desktop letterhead even on a phone.
+ */
+.sheet {
+  --sheet-measure: calc(
+    var(--ask-grid-column) * var(--report-columns, 7) + var(--ask-grid-gutter) *
+      (var(--report-columns, 7) - 1)
+  );
+
+  /* The letterhead's text block, as fixed heights from the control scale so
+     the masthead logo can be sized to match it exactly:
+       publisher band  28px (control-xs)
+       gap              4px
+       date line       12px × 1.4
+       gap              4px
+       title band      32px (control-sm)                        = 84.8px */
+  --band-block: var(--ask-control-xs);
+  --title-band-block: var(--ask-control-sm);
+  --letterhead-block: calc(
+    var(--band-block) + var(--title-band-block) +
+      var(--ask-font-2xs) * var(--ask-leading-normal) + 2 * var(--ask-space-1)
+  );
+
+  container: sheet / inline-size;
+  inline-size: 100%;
+  /* `--sheet-grow` is set only on an export copy whose table would
+     otherwise be cut (ExportStage, `fit`); unset, it is nothing. */
+  max-inline-size: calc(var(--sheet-measure) + var(--sheet-grow, 0px));
+  margin-inline: auto;
+
+  /* The Report style's typeface for the whole sheet; the theme's otherwise. */
+  font-family: var(--report-font, var(--mantine-font-family));
+}
+
+/*
+ * The bands at the inline-start and the logo's box at the inline-end (see
+ * Masthead.module.css), the box exactly as tall as the bands' block.
+ *
+ * THE TEXT ON THE LEFT IS NEVER SQUEEZED FOR THE LOGO. Neither side shrinks:
+ * the bands keep their four columns and the logo keeps its full height. On
+ * the desktop sheet both always fit (420 + 16 + at most 310 = 746px of 750).
+ * On a narrower sheet, a logo with no room beside the bands wraps onto a line
+ * of its own ABOVE them (wrap-reverse), still at the inline-end, rather than
+ * narrowing the title. Downloads are made at full width, so never wrap.
+ */
+.letterhead {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-2) var(--ask-space-4);
+  padding-block-end: var(--ask-space-2);
+}
+
+/* The bands run four grid columns wide, as in the benchmark, where they stop
+   well short of the logo rather than running into it. */
+.publisher {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+  flex: 0 0 calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
+  min-inline-size: 0;
+}
+
+/* The Report style's fill, with ink or white chosen to read on it; the
+   brand tint and the scheme's ink otherwise. */
+.band {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--band-block);
+  margin: 0;
+  padding-inline: var(--ask-space-2);
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  color: var(--report-on-fill, var(--ask-text-primary));
+}
+
+/*
+ * Optical centring. A font's metrics can leave more room under the baseline
+ * than above the capitals — Lato's did, measured at 7px above the capitals
+ * against 9px below the baseline in the publisher band — so text centred by
+ * its line box rides high. Trimming the line box to cap-height and baseline
+ * makes the band centre the capitals themselves, in any typeface the Report
+ * style picks. Descenders hang into the band's space, which is what the eye
+ * expects. Ignored where unsupported.
+ */
+.bandText {
+  text-box: trim-both cap alphabetic;
+}
+
+.publisherName {
+  font-size: var(--ask-font-sm);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+}
+
+.date {
+  margin: 0;
+  padding-inline: var(--ask-space-2);
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-secondary);
+}
+
+.title {
+  min-block-size: var(--title-band-block);
+  font-size: var(--ask-font-md);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+}
+
+.title .bandText {
+  text-wrap: balance;
+}
+
+.source {
+  margin: var(--ask-space-2) 0 0;
+  font-size: var(--ask-font-2xs);
+  font-style: italic;
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}
+
+/* On a phone-width sheet, too narrow for the bands' four columns, the bands
+   take the full width under the logo. A container query, so the full-width
+   export copy never stacks. */
+@container sheet (max-width: 639px) {
+  .letterhead {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .publisher {
+    flex-basis: auto;
+  }
+}

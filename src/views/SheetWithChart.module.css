@@ -1,0 +1,9 @@
+/* A sheet that holds its chart (Remittance, Cement): the table, then the
+   chart under it, as their benchmarks stack them; the sheet's source line
+   follows the chart. */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-8);
+  min-inline-size: 0;
+}

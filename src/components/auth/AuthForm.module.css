@@ -1,0 +1,104 @@
+/*
+ * Shared form chrome for the three auth pages. The layout owns the measure;
+ * this file owns the rhythm inside it.
+ *
+ * The rhythm is deliberately tight. The pages are meant to fit one screen
+ * without scrolling from about 800px of viewport height up (a 1440×900 window
+ * with browser chrome), so every gap is one step below what a content page
+ * would use, short fields share a line, and the providers share a line.
+ */
+.heading {
+  margin: 0;
+  color: var(--ask-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin-block: var(--ask-space-1) 0;
+  font-size: var(--ask-font-sm);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-secondary);
+}
+
+.alert {
+  margin-block-start: var(--ask-space-4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-3);
+  margin-block-start: var(--ask-space-5);
+}
+
+/* Two short fields on one line. Collapses on a phone, where the measure is
+   too narrow for two useful inputs. */
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ask-space-3);
+}
+
+@media (max-width: 639px) {
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-4);
+  flex-wrap: wrap;
+}
+
+.submit {
+  margin-block-start: var(--ask-space-1);
+}
+
+.legal {
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-tertiary);
+}
+
+.divider {
+  margin-block: var(--ask-space-4);
+}
+
+/* The two providers share a line. Each button's accessible name carries the
+   full action ("Sign in with Google"); the visible label is the provider. */
+.sso {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ask-space-3);
+}
+
+.switch {
+  margin-block: var(--ask-space-4) 0;
+  font-size: var(--ask-font-xs);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-secondary);
+}
+
+/* A completed step: the same measure as the form, no controls. */
+.done {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-4);
+  margin-block-start: var(--ask-space-5);
+  font-size: var(--ask-font-sm);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-secondary);
+}
+
+.done p {
+  margin: 0;
+}
+
+.done strong {
+  font-weight: 600;
+  color: var(--ask-text-primary);
+}

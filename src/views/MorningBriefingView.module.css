@@ -1,0 +1,123 @@
+/*
+ * The sheet's body: the stories at the inline-start and the markets at the
+ * inline-end, four grid columns wide (420px, the Major Indices table's room
+ * at the largest text size), the stories taking the rest — the benchmark's
+ * two columns, the news about twice as wide as the tables. The two tops line
+ * up 24px under the title's rule, the tables 16px apart, as on the live page.
+ *
+ * The sheet is a size container (ReportSheet.module.css): on a sheet too
+ * narrow for both, the markets go under the stories, full width.
+ */
+.body,
+.footer {
+  --briefing-markets: calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--briefing-markets);
+  align-items: start;
+  gap: var(--ask-space-8) var(--ask-grid-gutter);
+  padding-block-start: var(--ask-space-6);
+}
+
+.markets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-4);
+  min-inline-size: 0;
+}
+
+/*
+ * The benchmark's foot. The research contact closes the tables' column,
+ * centred on it: the name bold, the address a link under it.
+ */
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ask-space-1);
+  margin: 0;
+  padding-block-start: var(--ask-space-4);
+  text-align: center;
+}
+
+.contactName {
+  font-size: var(--ask-font-md);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+.contactLink,
+.siteLink {
+  color: var(--ask-text-link);
+  text-decoration: underline;
+}
+
+.contactLink {
+  font-size: var(--ask-font-sm);
+  line-height: var(--ask-leading-snug);
+}
+
+/* Then the last line, in the body's two columns: the publisher's name
+   centred under the stories, the Jama Punji site and mark at the end of the
+   tables' column. */
+.footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--briefing-markets);
+  align-items: center;
+  gap: var(--ask-space-4) var(--ask-grid-gutter);
+  padding-block-start: var(--ask-space-10);
+}
+
+.footerName {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ask-font-sm);
+  font-weight: 500;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-link);
+}
+
+.site {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ask-space-4);
+  margin: 0;
+  font-size: var(--ask-font-xs);
+  line-height: var(--ask-leading-snug);
+}
+
+.mark {
+  display: block;
+  block-size: var(--ask-space-6);
+  inline-size: auto;
+}
+
+/* The mark is drawn for white paper: on the dark scheme it sits on the
+   light plate an uploaded logo does. The export copy is always light. */
+:global([data-mantine-color-scheme='dark']) .mark {
+  padding: var(--ask-space-1);
+  border-radius: var(--ask-radius-sm);
+  background: var(--report-plate);
+  box-sizing: content-box;
+}
+
+:global([data-scheme='light']) .mark {
+  padding: 0;
+  background: none;
+}
+
+/* Under four grid columns of news beside the tables (860px). */
+@container sheet (max-width: 859px) {
+  .body,
+  .footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .site {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,37 @@
+/* Six grid columns, half the sheet, as in the benchmark; the full width on
+   anything narrower. */
+.root {
+  inline-size: 100%;
+  max-inline-size: calc(var(--ask-grid-column) * 6 + var(--ask-grid-gutter) * 5);
+}
+
+/* An option: the ticker over the name, and a check beside the chosen one. */
+.option {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-2);
+  min-inline-size: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.ticker {
+  font-size: var(--ask-font-xs);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-secondary);
+}

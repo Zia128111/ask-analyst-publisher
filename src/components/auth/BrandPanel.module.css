@@ -1,0 +1,109 @@
+/*
+ * The panel is hidden below lg: on a phone the form IS the page, and a
+ * preview of a desktop dashboard above a sign-in form is decoration the reader
+ * has to scroll past.
+ */
+.panel {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    /* Pinned to the viewport while a long form (sign-up) scrolls beside it,
+       so the panel reads as the application frame rather than as content.
+       Its height is the viewport less the shell's gutter on each side. */
+    position: sticky;
+    inset-block-start: var(--ask-space-4);
+    align-self: start;
+    block-size: calc(100dvh - 2 * var(--ask-space-4));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--ask-space-10);
+    overflow: hidden;
+
+    padding-block-start: var(--ask-space-12);
+    padding-inline: var(--ask-space-10);
+    border-radius: var(--ask-radius-xl);
+
+    /* Brand ramp only, no foreign hue: step 9 under the copy, step 6 at the
+       foot. The steps are Mantine's `brand` colour, which the theme binds to
+       the design system's blue ramp, so this is the palette of every button. */
+    background: linear-gradient(
+      168deg,
+      var(--mantine-color-brand-9) 0%,
+      var(--mantine-color-brand-8) 48%,
+      var(--mantine-color-brand-6) 100%
+    );
+    /* White in BOTH schemes. text-inverse flips to ink in dark mode and would
+       vanish against the gradient. */
+    color: var(--ask-text-on-brand);
+  }
+}
+
+@media (min-width: 1280px) {
+  .panel {
+    padding-block-start: var(--ask-space-16);
+    padding-inline: var(--ask-space-12);
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-3);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /* Brand tint on the deep step: well clear of 4.5:1. */
+  color: var(--mantine-color-brand-2);
+}
+
+.headline {
+  margin: 0;
+  max-inline-size: 26ch;
+  color: inherit;
+  font-size: var(--ask-font-2xl);
+  line-height: var(--ask-leading-snug);
+  letter-spacing: -0.01em;
+  /* Balanced lines, so the headline never leaves one word on its own. */
+  text-wrap: balance;
+}
+
+@media (min-width: 1280px) {
+  .headline {
+    font-size: var(--ask-font-3xl);
+    line-height: var(--ask-leading-tight);
+  }
+}
+
+.lede {
+  margin: 0;
+  max-inline-size: 44ch;
+  font-size: var(--ask-font-md);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--mantine-color-brand-1);
+  text-wrap: pretty;
+}
+
+/*
+ * The preview bleeds off the inline-end and block-end edges of the panel, as
+ * the benchmark's monitor does. Negative margins push it past the panel's
+ * padding and the panel's overflow clips it, so it always reads as a surface
+ * emerging from the edge whatever the viewport height.
+ */
+.preview {
+  flex: 1;
+  min-block-size: 0;
+  /* A flex column, so the card inside can stretch to the panel's foot. */
+  display: flex;
+  flex-direction: column;
+  margin-inline-start: var(--ask-space-4);
+  margin-inline-end: calc(-1 * var(--ask-space-16));
+  margin-block-end: calc(-1 * var(--ask-space-8));
+}

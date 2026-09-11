@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "publisher",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "design-system-docs",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "D:/Claude for Design/Ask Analyst New UI/node_modules/vite/bin/vite.js",
+        "D:/Claude for Design/Ask Analyst New UI",
+        "--config",
+        "D:/Claude for Design/Ask Analyst New UI/vite.config.ts"
+      ],
+      "port": 5173,
+      "autoPort": true
+    }
+  ]
+}

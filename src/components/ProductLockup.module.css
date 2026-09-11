@@ -1,0 +1,18 @@
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ask-space-3);
+}
+
+.product {
+  padding-inline-start: var(--ask-space-3);
+  border-inline-start: var(--ask-border-thin) solid var(--ask-border-default);
+
+  font-size: var(--ask-font-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-secondary);
+  white-space: nowrap;
+}

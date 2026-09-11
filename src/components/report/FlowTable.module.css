@@ -1,0 +1,130 @@
+/*
+ * The design system's Table theme supplies the brand-blue rules, tabular
+ * figures and bidi-isolated numeric cells. This file reshapes it to the
+ * Portfolio Investment benchmark in the colours every sheet uses: a
+ * two-row header — the band naming the table and its parts, then the column
+ * headings — tinted between two thin rules, every line closing on a rule,
+ * labels at the inline-start and figures at the inline-end, the net totals
+ * bold across the row and the main table's Net column tinted down the
+ * table. The first and last cells sit flush with the sheet's edges, as on
+ * the other sheets.
+ *
+ * The Report style reaches it through custom properties (see reportVars),
+ * each read with the design-system token as its fallback:
+ *   --report-text           the size of every cell, the header included
+ *   --report-rule           every rule
+ *   --report-fill           the header, with --report-on-fill on it
+ *   --report-highlight      the Net column, with --report-on-highlight on
+ *                           it; unset, both follow the fill, as the other
+ *                           sheets' current columns do
+ *
+ * Selectors are one step heavier than the theme's (`> thead > tr > th`), so
+ * they win on specificity rather than on stylesheet order.
+ */
+
+.table > thead > tr > :is(th, td),
+.table > tbody > tr > :is(td, th) {
+  font-size: var(--report-text, var(--ask-font-xs));
+  line-height: var(--ask-leading-snug);
+  vertical-align: middle;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* The header: both rows on the fill, one block between two rules. */
+.table > thead > tr > :is(th, td) {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  border-block: 0;
+  text-align: end;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--report-on-fill, var(--ask-text-primary));
+}
+
+.table > thead > tr.band > th {
+  border-block-start: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  text-align: start;
+}
+
+/* Each part's name centred over its columns. */
+.table > thead > tr.band > th[data-span] {
+  text-align: center;
+}
+
+.table > thead > tr.headings > :is(th, td) {
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+}
+
+/* Every line closes on a rule, the last one included. */
+.table > tbody > tr > :is(td, th) {
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-weight: 400;
+}
+
+/* Figures never break, and neither do the labels: every line of the table
+   is one line, at every text size (the user's call — two-line labels made
+   the rows uneven). */
+.table > tbody > tr > td[data-numeric] {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.table > tbody > tr > th.pin {
+  text-align: start;
+  white-space: nowrap;
+}
+
+/* The net totals: bold from the label to the last figure. */
+.table > tbody > tr[data-bold] > :is(td, th) {
+  font-weight: 700;
+}
+
+.table > tbody > tr > td[data-net] {
+  background: var(--report-highlight, var(--report-fill, var(--ask-bg-brand-subtle)));
+  color: var(--report-on-highlight, var(--report-on-fill, var(--ask-text-primary)));
+}
+
+/* Flush with the sheet's edges: the labels under the bands, the last
+   figures under the logo. */
+.table > :is(thead, tbody) > tr > :first-child {
+  padding-inline-start: 0;
+}
+
+.table > :is(thead, tbody) > tr > :last-child {
+  padding-inline-end: 0;
+}
+
+/*
+ * The pinned labels. Opaque, or figures scroll visibly underneath them.
+ * Logical inset, so in the Arabic build they pin to the right edge with no
+ * second rule.
+ */
+.pin {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--ask-bg-page);
+}
+
+.table > thead > tr > .pin {
+  z-index: 2;
+}
+
+/* The row hover paints the <tr>; the pinned label follows the row. */
+.table > tbody > tr:hover > th.pin {
+  background: var(--ask-bg-hover);
+}
+
+/*
+ * Optical centring, as on the other sheets: each cell's line box trimmed to
+ * cap-height and baseline, with even padding, so figures sit centred between
+ * the rules in whichever typeface the Report style picks. Where the browser
+ * cannot trim, the compact density's padding stays.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+  .scroller .table > tbody > tr > :is(td, th),
+  .scroller .table > thead > tr > :is(th, td) {
+    text-box: trim-both cap alphabetic;
+    padding-block: var(--ask-space-2);
+  }
+}

@@ -1,0 +1,111 @@
+/*
+ * The benchmark's small tables, measured on the live page, on the system's
+ * tokens: the name 15px semibold blue, inset 8px, 8px above the table's top
+ * rule; the headings bold and centred over a rule; 31px rows, every other
+ * one filled, cells parted by 1px lines of the page's colour and padded 5px;
+ * the labels at the inline-start, everything else centred; a rule under the
+ * last row. Here: the name one type step over the text (--briefing-lead),
+ * inset and spaced by space-2; cells 10px above and below trimmed text
+ * (about 30px rows at 14px) and space-2 at the sides.
+ *
+ * The Report style reaches it through custom properties, each read with the
+ * design-system token as its fallback:
+ *   --report-text           the cells' size
+ *   --report-rule           the three rules
+ *   --report-fill           the filled rows, with --report-on-fill on them
+ *   --briefing-accent       the name: the chosen border colour where it
+ *                           reads as text, set by the view
+ *
+ * Selectors are one step heavier than the theme's (`> thead > tr > th`), so
+ * they win on specificity rather than on stylesheet order.
+ */
+
+.block {
+  min-inline-size: 0;
+}
+
+.title {
+  margin: 0;
+  padding-inline: var(--ask-space-2);
+  padding-block-end: var(--ask-space-2);
+  font-size: var(--briefing-lead, var(--ask-font-sm));
+  font-weight: 600;
+  line-height: var(--ask-leading-snug);
+  white-space: nowrap;
+  color: var(--briefing-accent, var(--ask-text-link));
+}
+
+.table {
+  border-block: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+}
+
+.table > thead > tr > :is(th, td),
+.table > tbody > tr > :is(th, td) {
+  padding-inline: var(--ask-space-2);
+  font-size: var(--report-text, var(--ask-font-xs));
+  line-height: var(--ask-leading-snug);
+  vertical-align: middle;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  color: var(--ask-text-primary);
+}
+
+.table > thead > tr > :is(th, td) {
+  background: none;
+  border: 0;
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-weight: 700;
+}
+
+/* Cells parted by fine lines of the page's own colour, which show only on
+   the filled rows, as in the benchmark. */
+.table > tbody > tr > :is(th, td) {
+  border: var(--ask-border-thin) solid var(--ask-bg-page);
+  font-weight: 400;
+}
+
+.table > tbody > tr:nth-child(odd) > :is(th, td) {
+  background: var(--report-fill, var(--ask-bg-brand-subtle));
+  color: var(--report-on-fill, var(--ask-text-primary));
+}
+
+/* Figures centred, as the benchmark prints them: the theme ends numeric
+   cells with `:is(td, th)[data-numeric]`, which this outweighs. */
+.table > tbody > tr > td[data-numeric] {
+  text-align: center;
+}
+
+.table > :is(thead, tbody) > tr > .label {
+  text-align: start;
+}
+
+/* No row highlight on hover here (the user's call, for this screen only):
+   the theme paints `tbody tr:hover`, which this outweighs. The other
+   sheets' tables keep it. */
+.scroller .table > tbody > tr:hover {
+  background: none;
+}
+
+/* The labels, pinned where a phone scrolls the table. Opaque, or the
+   figures scroll visibly underneath. */
+.label {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--ask-bg-page);
+}
+
+/*
+ * Optical centring, as on the other sheets: each line box trimmed to
+ * cap-height and baseline, with even padding, so the text sits centred in
+ * its row in whichever typeface the Report style picks.
+ */
+@supports (text-box: trim-both cap alphabetic) {
+  .scroller .table > tbody > tr > :is(td, th),
+  .scroller .table > thead > tr > :is(th, td) {
+    text-box: trim-both cap alphabetic;
+    padding-block: calc(var(--ask-space-2) + var(--ask-space-1) / 2);
+  }
+}

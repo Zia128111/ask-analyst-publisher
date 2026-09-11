@@ -1,0 +1,6 @@
+/* Sized like the system's `md` icon, which is what a button adornment takes. */
+.mark {
+  inline-size: var(--ask-space-5);
+  block-size: var(--ask-space-5);
+  flex: none;
+}

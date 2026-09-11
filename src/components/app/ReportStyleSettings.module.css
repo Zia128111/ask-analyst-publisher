@@ -1,0 +1,289 @@
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-4);
+}
+
+/*
+ * The groups — Table, then Chart where the report has one — each a heading
+ * and its fields at the fields' own rhythm. A rule and a second step of
+ * space set a group off from the one before, so the heading sits nearer its
+ * own fields than the last field above it. The heading is a type step above
+ * the field labels, 16px bold against their 14px.
+ */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-4);
+}
+
+.group + .group {
+  padding-block-start: var(--ask-space-4);
+  border-block-start: var(--ask-border-thin) solid var(--ask-border-subtle);
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: var(--ask-font-sm);
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+/*
+ * A field: its heading, then its control the xs step (4px) below — the gap
+ * between the Latest Result page's "Company" label and its search, which is
+ * that label's own margin. One gap for every field, whatever its control:
+ * an input, the text-size switch or the logo row. A colour field's contrast
+ * readout follows its input at the same step.
+ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+}
+
+/* The label at the start of the line, the info button at its end — the
+   field's top corner, over the end of the control (the user's placement).
+   Both centre on the label's line; the button is no taller than that line,
+   so the heading stays one line high. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-2);
+}
+
+/* The field's gap is the space under the label here, not Mantine's margin. */
+.head .label {
+  margin: 0;
+}
+
+/* The button keeps its full target, but lends the xs step above and below to
+   the heading's line, so a label with a button sits exactly where one
+   without sits. Held one step in from the end, its icon stands straight
+   over the icons at the end of the fields — the font list's chevron, the
+   colour fields' eyedropper (measured: both centre 18px from the edge). */
+.head .info {
+  margin-block: calc(-1 * var(--mantine-spacing-xs));
+  margin-inline-end: var(--ask-space-1);
+  color: var(--ask-text-tertiary);
+}
+
+/*
+ * The explainer's tooltip follows the colour scheme, as the design system's
+ * chart tooltips do, and with their tokens: white with a grey edge in light
+ * mode, slate with a darker edge in dark mode. Mantine's own is inverted —
+ * near-black on a light page — which the user called wrong for light mode.
+ * The bg and text go in through Mantine's own variables, which it sets
+ * inline only when a `color` is passed. The arrow takes the same edge on its
+ * two outer sides; Mantine already makes its inner sides transparent.
+ */
+.tooltip {
+  --tooltip-bg: var(--ask-chart-tooltip-bg);
+  --tooltip-color: var(--ask-text-primary);
+
+  max-inline-size: calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter) * 2);
+  padding: var(--ask-space-2) var(--ask-space-3);
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.tooltipArrow {
+  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
+}
+
+/* The logo in use, if any, above its buttons. */
+.logoRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-2);
+}
+
+/* The current logo, small, on the light plate it prints on in dark mode;
+   as wide as the logo, not the field. */
+.logoPreview {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  block-size: var(--ask-control-lg);
+  max-inline-size: calc(var(--ask-grid-column) * 2);
+  padding: var(--ask-space-1) var(--ask-space-2);
+  border: var(--ask-border-thin) solid var(--ask-border-subtle);
+  border-radius: var(--ask-radius-md);
+}
+
+.logoPreview img {
+  display: block;
+  block-size: 100%;
+  inline-size: auto;
+  max-inline-size: 100%;
+  object-fit: contain;
+}
+
+/*
+ * A colour field's hex code reads in capitals, as brand guides print it; the
+ * placeholder names the default in words too, so it keeps its case. In a
+ * right-to-left page the code still reads left to right: plaintext takes the
+ * text's direction from its first letter ("#FF1485" would otherwise print as
+ * "FF1485#"), and unlike dir="ltr" it leaves the field's padding, which
+ * clears the swatch, on the page's inline start.
+ */
+.hex {
+  text-transform: uppercase;
+  unicode-bidi: plaintext;
+}
+
+.hex::placeholder {
+  text-transform: none;
+}
+
+/* An icon beside text that may wrap: a box one line tall, so the icon centres
+   on the first line whatever the text size. */
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  block-size: 1lh;
+}
+
+/* Icon and words together, so the verdict never rests on colour. Under its
+   colour field, in the small type of a hint. */
+.readout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ask-space-1);
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-secondary);
+}
+
+.readout .icon {
+  color: var(--ask-positive-text);
+}
+
+.readout[data-passes='false'] .icon {
+  color: var(--ask-warning-text);
+}
+
+/* A logo warning, or an Apply failure; the field's or the bar's gap is its
+   space above. */
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ask-space-1);
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-negative-text);
+}
+
+/* A warning is advice, not a failure: grey type, as the user asked, with the
+   warning colour kept on its icon — the contrast readout's pattern, so the
+   caution rests on the icon and the words, never on colour alone. */
+.message[data-tone='warning'] {
+  color: var(--ask-text-secondary);
+}
+
+.message[data-tone='warning'] .icon {
+  color: var(--ask-warning-text);
+}
+
+/*
+ * Buttons take the drawer's full width, as its fields do (the user's ask):
+ * one alone fills the line, two share it equally — Upload logo alone,
+ * Replace and Remove; Apply and Discard. Columns are made per button, so a
+ * button that is not rendered leaves no gap (FileButton's hidden input is
+ * display: none and makes no column either).
+ */
+.pair {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--ask-space-2);
+}
+
+/* Reset style across the width, what it keeps under it. */
+.reset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-2);
+}
+
+/*
+ * The Apply bar sticks to the foot of the drawer's scroll area while the
+ * Report style is in view, and bleeds to the drawer's edges: the drawer body
+ * is padded one 16px step, which the negative margin takes back.
+ *
+ * It sits on the system's raised layer. Mantine lifts some controls' insides
+ * — the SegmentedControl's labels sit at z-index 2 — and on a phone, where
+ * the bar covers the fields as they scroll under it, a lower bar let the
+ * text-size labels paint through it.
+ */
+.applyBar {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--ask-z-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-2);
+  margin-inline: calc(-1 * var(--ask-space-4));
+  padding: var(--ask-space-3) var(--ask-space-4);
+  background: var(--ask-bg-surface);
+  border-block-start: var(--ask-border-thin) solid var(--ask-border-subtle);
+}
+
+/*
+ * Apply with nothing to apply wears the design system's disabled look —
+ * muted fill, default edge, disabled text — the look its Discard neighbour
+ * already gets. The system styles only DEFAULT buttons that way; a filled
+ * one falls through to Mantine's own disabled colours, neutral greys from
+ * outside the system that show as charcoal on the slate drawer in dark mode
+ * (the user: "looks weird"). Design-system finding 6 in CLAUDE.md.
+ */
+.applyBar [data-variant='filled'][data-disabled] {
+  background: var(--ask-bg-muted);
+  border-color: var(--ask-border-default);
+  color: var(--ask-text-disabled);
+}
+
+/* Asking what to do with pending changes: the system's warning tint, with
+   the question in words, so it never rests on the colour. */
+.applyBar[data-held] {
+  background: var(--ask-warning-bg);
+  border-block-start-color: var(--ask-warning-border);
+}
+
+.prompt {
+  margin: 0;
+  font-size: var(--ask-font-xs);
+  font-weight: 600;
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-primary);
+}
+
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ask-space-1);
+  margin: 0;
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}
+
+.status[data-state='pending'] {
+  color: var(--ask-warning-text);
+}
+
+.status[data-state='applied'] {
+  color: var(--ask-positive-text);
+}
+
+.resetHint {
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}

@@ -1,0 +1,81 @@
+/* The toolbar and the pending card share the report sheet's measure (seven
+   grid columns, or the eight or nine the Report style's larger text sizes
+   take — see ReportSheet.module.css), so the toggle, the Download button and
+   the sheet's edges line up. */
+.stack,
+.pending {
+  --sheet-measure: calc(
+    var(--ask-grid-column) * var(--report-columns, 7) + var(--ask-grid-gutter) *
+      (var(--report-columns, 7) - 1)
+  );
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-2);
+}
+
+/*
+ * A reader whose browser holds a Report style sees the report once that
+ * style is applied — never the default letterhead and then theirs. The head
+ * script (src/data/branding.ts) marks <html> before first paint; the view
+ * marks itself ready straight after hydrating. If hydration ever fails, the
+ * report appears regardless after two seconds.
+ */
+:global(html[data-report-branded]) .stack:not([data-branding-ready]) {
+  visibility: hidden;
+  animation: reveal-report 0s linear 2s forwards;
+}
+
+@keyframes reveal-report {
+  to {
+    visibility: visible;
+  }
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-3);
+  inline-size: 100%;
+  max-inline-size: var(--sheet-measure);
+  margin-inline: auto;
+}
+
+/* A search row above the toolbar (Latest Result's company search), on the
+   sheet's inline-start edge. */
+.search {
+  inline-size: 100%;
+  max-inline-size: var(--sheet-measure);
+  margin-inline: auto;
+}
+
+/*
+ * Latest Result's looser rhythm, after the benchmark, where the search, the
+ * masthead switch and the sheet each stand clear of the next: 24px from the
+ * search to the switch row, 16px from that row to the sheet. MTS keeps the
+ * tighter stack: at its largest text size it fills a 960px screen to within
+ * 8px, and this would push it over.
+ */
+.roomy {
+  gap: var(--ask-space-4);
+}
+
+.roomy .search {
+  margin-block-end: var(--ask-space-2);
+}
+
+.pending {
+  inline-size: 100%;
+  max-inline-size: var(--sheet-measure);
+  margin-inline: auto;
+}
+
+.pendingTitle {
+  margin: 0;
+  padding: var(--ask-space-6) var(--ask-space-6) 0;
+  color: var(--ask-text-primary);
+}

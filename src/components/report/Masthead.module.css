@@ -1,0 +1,85 @@
+/*
+ * THE LOGO BOX. Every logo — built-in or uploaded — lives in one closed box
+ * beside the bands: exactly as tall as the letterhead's text block
+ * (`--letterhead-block`, 84.8px, published by ReportSheet from the same
+ * tokens that size the block) and at most the three grid columns the bands
+ * leave (3 × 90 + 2 × 20 = 310px). Nothing is drawn outside it.
+ *
+ * Height is the fixed dimension: a logo is drawn at the box's full height,
+ * so its top meets the top of the publisher band and its foot the foot of
+ * the title band, and its width follows from its own proportions. Only a
+ * logo wider than the box at that height (more than about 3.7:1) is scaled
+ * down to the box's width instead, proportions intact, centred in its
+ * height. The Alpha Capital lockup is 3.3:1 and the Ask Analyst logo 2.6:1.
+ *
+ * Uploaded logos are trimmed of empty margins first (src/branding/logo.ts),
+ * so it is the artwork that fills the height, not a transparent border.
+ */
+/*
+ * The cap is on the box itself, not only on the image inside it. A flex item
+ * sizes itself from its content, and an image's percentage max-width does not
+ * count towards that, so a 12:1 logo would otherwise make the box claim its
+ * full-height width (over 1,000px) and squeeze the bands to nothing. The box
+ * never shrinks either (`flex: none`): where it has no room beside the bands,
+ * the letterhead wraps it above them instead (ReportSheet.module.css). The
+ * auto margin keeps it at the inline-end on its own line and on a phone.
+ */
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: none;
+  block-size: var(--letterhead-block);
+  max-inline-size: min(100%, calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter) * 2));
+  margin-inline-start: auto;
+}
+
+.slot img,
+.slot svg {
+  display: block;
+  block-size: 100%;
+  inline-size: auto;
+  max-inline-size: 100%;
+  /* A logo narrowed to fit shrinks as a whole, never squashed. */
+  object-fit: contain;
+}
+
+/* Scheme swap. Mantine stamps the scheme on <html>; display:none also takes
+   the unused image out of the accessibility tree, so its alt is read once. */
+.onDark {
+  display: none !important;
+}
+
+:global([data-mantine-color-scheme='dark']) .onLight {
+  display: none !important;
+}
+
+:global([data-mantine-color-scheme='dark']) .onDark {
+  display: block !important;
+}
+
+/* An uploaded logo has no dark variant, so on the dark scheme it sits on a
+   plate of the light surface — whatever colours it was drawn in, it stays
+   legible, as it would on the printed page. The plate fills the logo's box
+   and the artwork is inset in it. */
+:global([data-mantine-color-scheme='dark']) .slot .custom {
+  padding: var(--ask-space-2);
+  border-radius: var(--ask-radius-md);
+  background: var(--report-plate);
+}
+
+/* The export stage is always light, whatever the page's scheme: the black
+   artwork, on white, and no plate. Declared after the dark rules, which it
+   must beat on equal specificity. */
+:global([data-scheme='light']) .onLight {
+  display: block !important;
+}
+
+:global([data-scheme='light']) .onDark {
+  display: none !important;
+}
+
+:global([data-scheme='light']) .slot .custom {
+  padding: 0;
+  background: none;
+}

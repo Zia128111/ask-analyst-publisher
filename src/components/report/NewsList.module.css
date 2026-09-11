@@ -1,0 +1,46 @@
+/*
+ * The stories, one under the next, in the sheet's typeface, spaced as the
+ * live page spaces them (32px apart, the summary right under its headline).
+ * The summary is the Report style's text size and the headline one step of
+ * the type scale above it (--briefing-lead, set by the view), as the
+ * benchmark sets its headlines 2px over the text. The link is the system's
+ * link: its colour, underlined.
+ */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+}
+
+.headline {
+  margin: 0;
+  font-size: var(--briefing-lead, var(--ask-font-sm));
+  font-weight: 700;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-primary);
+}
+
+.summary {
+  margin: 0;
+  font-size: var(--report-text, var(--ask-font-xs));
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-secondary);
+}
+
+.more {
+  color: var(--ask-text-link);
+  text-decoration: underline;
+}
+
+.more:hover {
+  color: var(--ask-text-link-hover);
+}

@@ -1,0 +1,43 @@
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-3);
+  padding: var(--ask-space-3) var(--ask-space-4);
+  border: var(--ask-border-thin) solid var(--ask-border-default);
+  border-radius: var(--ask-radius-lg);
+  background: var(--ask-bg-surface);
+}
+
+/* The "selected" pairing the system uses everywhere: brand tint behind the
+   link blue. 4.51:1 as text, comfortably past 3:1 for a glyph. */
+.tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--ask-space-8);
+  block-size: var(--ask-space-8);
+  border-radius: var(--ask-radius-md);
+  background: var(--ask-bg-brand-subtle);
+  color: var(--ask-text-link);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-1);
+  min-inline-size: 0;
+}
+
+.title {
+  font-size: var(--ask-font-xs);
+  font-weight: 600;
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-primary);
+}
+
+.body {
+  font-size: var(--ask-font-2xs);
+  line-height: var(--ask-leading-relaxed);
+  color: var(--ask-text-tertiary);
+}

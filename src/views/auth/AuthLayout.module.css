@@ -1,0 +1,86 @@
+/*
+ * AUTH SHELL
+ *
+ * Every measure here is a design-system variable. The one derived value is the
+ * form measure: FOUR COLUMNS of the twelve-column layout grid, 4 x 90 + 3 x 20
+ * = 420px, so the form is sized from the grid tokens rather than by eye and
+ * lines up with anything else laid out on that grid.
+ */
+.shell {
+  min-block-size: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  background: var(--ask-bg-page);
+}
+
+.column {
+  --auth-measure: calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
+
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--ask-space-6);
+  padding-block: var(--ask-space-4);
+}
+
+/* The lockup row, the form and the foot note share one measure and therefore
+   one inline-start edge — the eye returns to the same line down the page. */
+.top,
+.main,
+.bottom {
+  inline-size: 100%;
+  max-inline-size: var(--auth-measure);
+  margin-inline: auto;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-4);
+}
+
+/* Vertically centred when the form is shorter than the screen; from about
+   800px of viewport height the pages fit without scrolling, which is why the
+   block padding here is one step, not three. */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--ask-space-3);
+}
+
+.bottom {
+  padding-block-start: var(--ask-space-2);
+}
+
+/* On a short viewport (a 1366×768 laptop with browser chrome) the form is
+   the page; the reassurance card yields rather than pushing it into scroll. */
+@media (max-height: 720px) {
+  .bottom {
+    display: none;
+  }
+}
+
+/* Two columns from lg. The brand panel is inset from the viewport by one
+   spacing step and rounded, as in the benchmark, rather than bleeding to the
+   edge — so the same gutter frames both columns. */
+@media (min-width: 1024px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--ask-space-4);
+    padding: var(--ask-space-4);
+  }
+
+  .column {
+    padding-inline: var(--ask-space-10);
+    padding-block: var(--ask-space-3);
+  }
+}
+
+@media (min-width: 1280px) {
+  .column {
+    padding-inline: var(--ask-space-16);
+    padding-block: var(--ask-space-4);
+  }
+}
