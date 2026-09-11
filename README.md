@@ -14,6 +14,11 @@ The design system is a private GitHub package and installs against your
 existing `gh` credentials. If it fails to resolve, check `gh auth status`
 before assuming the package name is wrong.
 
+Live at **https://ask-analyst-publisher.vercel.app**. Vercel cannot install
+the private design system, so pushing to GitHub does not deploy (Git
+deployments are off in `vercel.json`); deploys go out from the CLI — see
+"Repository and deployment" in `CLAUDE.md`.
+
 ## Pages
 
 | Route | What is on it |

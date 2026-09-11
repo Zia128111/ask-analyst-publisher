@@ -14,6 +14,11 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   **Morning Briefing**, **Trade-PBS**, **Trade-SBP**, **Settlement**, **Remittance**,
   **Central Government Debt**, **Cement**, **Fertilizer**, **Currency** and **Auto** — every
   publication tab; only KSA's briefing (a different report) shows a pending page.
+- **Repo and deploy** (2026-09-11): public GitHub repo `Zia128111/ask-analyst-publisher`;
+  Vercel project `ask-analyst-publisher` ("Zia's projects"), live at
+  https://ask-analyst-publisher.vercel.app. Git deployments are OFF (Vercel cannot install the
+  private design system); production went out with `vercel deploy --prod` from a temp copy
+  carrying the packed design system — the recipe is in CLAUDE.md "Repository and deployment".
 - **Auto / Auto Sales Volumes** (2026-09-11, from the user's screenshot of the live page, the
   last tab): `api/msg/autos` (fixture; msg/pbs's rows without the year to date) on
   `MonthlyView` at 9 grid columns — makers bold with their models, then engine sizes, Total

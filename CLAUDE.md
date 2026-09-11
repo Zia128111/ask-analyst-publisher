@@ -1263,6 +1263,34 @@ active toggle label — and nothing else. Anything else is a regression.
 from the design system repo. Do not edit them here; update them upstream and
 re-copy, or the two drift apart.
 
+## Repository and deployment
+
+- **GitHub**: `Zia128111/ask-analyst-publisher`, PUBLIC (the user's call,
+  2026-09-11), `main`. Push as `Zia128111` — gh's active account on this
+  machine is `ziaali-dotcom`; switch for the push and back after.
+- **Vercel**: project `ask-analyst-publisher` in "Zia's projects"
+  (`zias-projects-6ff07fa3`), production https://ask-analyst-publisher.vercel.app.
+  The folder is linked (`.vercel/project.json`, git-ignored).
+- **Vercel cannot build this repo from GitHub**: its `npm install` cannot
+  fetch the PRIVATE `Knowbridge-UI/Design-system` (the Market Page's Git
+  builds fail the same way). So `vercel.json` turns Git deployments off
+  (`git.deploymentEnabled: false`) and production is deployed from the CLI.
+- **`vercel build` on Windows fails** after a good `next build` ("Unable to
+  find lambda for route: /alphacapital/auto" — the builder's Windows paths),
+  so a prebuilt deploy from this machine does not work either.
+- **How it is deployed** (2026-09-11): a copy of the committed tree (`git
+  archive HEAD`) in a temp folder; the INSTALLED design system packed into
+  it (`npm pack node_modules/@akseer/ask-analyst-design-system
+  --ignore-scripts --pack-destination vendor` — its `prepack` would rebuild
+  it); in the copy only, the dependency pointed at
+  `file:vendor/akseer-ask-analyst-design-system-1.3.3.tgz` and the lockfile
+  updated (`npm install --package-lock-only --ignore-scripts`); this
+  folder's `.vercel/project.json` copied in; then `vercel deploy --prod
+  --cwd <copy>`, which builds on Vercel's Linux machines. The tarball goes
+  only to the Vercel project, NEVER into the public repo: the package is
+  UNLICENSED. The lasting fix is a registry Vercel can read (the design
+  system published privately, a token in the project's env).
+
 ## Design system version
 
 The design system lives at **`Knowbridge-UI/Design-system`** and the dependency
