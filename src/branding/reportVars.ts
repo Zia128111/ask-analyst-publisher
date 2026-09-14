@@ -24,6 +24,11 @@ import { REPORT_SIZES, fontById, type Branding } from './types';
  *                          a negative figure on a chosen highlight (or fill):
  *                          the negative colour while it reads there, else
  *                          the highlight's own ink or white
+ *   --report-heading  a report's title (KSA's Morning Briefing); unset keeps
+ *                     the system's blue for text
+ *   --report-tag      the edition's tag beside the date; unset follows the
+ *                     heading
+ *   --report-on-tag   ink or white, whichever reads on that tag
  *   --report-plate    the light surface an uploaded logo sits on in dark mode
  *
  * The stylesheets read each one with the design-system token as its
@@ -58,5 +63,13 @@ export function reportVars(b: Branding): CSSProperties {
      chosen fill comes from the light tokens. */
   const highlight = b.highlight ?? b.fill;
   if (highlight) vars['--report-negative-on-highlight'] = readableOn(b.negative ?? NEGATIVE, highlight);
+  if (b.heading) vars['--report-heading'] = b.heading;
+  /* The tag follows the heading until it is given a colour of its own, as
+     the benchmark gives both one blue. */
+  const tag = b.tag ?? b.heading;
+  if (tag) {
+    vars['--report-tag'] = tag;
+    vars['--report-on-tag'] = textOn(tag).color;
+  }
   return vars as CSSProperties;
 }

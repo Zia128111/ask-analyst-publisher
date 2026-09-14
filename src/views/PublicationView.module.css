@@ -45,6 +45,12 @@
   margin-inline: auto;
 }
 
+/* A toolbar item held at the inline-end when it stands alone: KSA's Morning
+   Briefing, whose logo switch shows only once a logo is uploaded. */
+.end {
+  margin-inline-start: auto;
+}
+
 /* A search row above the toolbar (Latest Result's company search), on the
    sheet's inline-start edge. */
 .search {

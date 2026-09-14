@@ -7,6 +7,7 @@ import { fetchCementReport } from '../../../../src/data/cement';
 import { fetchCentralGovernmentDebtReport } from '../../../../src/data/centralGovernmentDebt';
 import { fetchCurrencyReport } from '../../../../src/data/currency';
 import { fetchFertilizerReport } from '../../../../src/data/fertilizer';
+import { fetchKsaMorningBriefing } from '../../../../src/data/ksaMorningBriefing';
 import {
   DEFAULT_TICKER,
   fetchCompanies,
@@ -25,6 +26,7 @@ import type { MonthlyReport } from '../../../../src/data/types';
 import { BopView } from '../../../../src/views/BopView';
 import { CementView } from '../../../../src/views/CementView';
 import { CurrencyView } from '../../../../src/views/CurrencyView';
+import { KsaMorningBriefingView } from '../../../../src/views/KsaMorningBriefingView';
 import { LatestResultView } from '../../../../src/views/LatestResultView';
 import { MonthlyView, type MonthlySheetKind } from '../../../../src/views/MonthlyView';
 import { MorningBriefingView } from '../../../../src/views/MorningBriefingView';
@@ -64,8 +66,8 @@ const isMonthlySheet = (slug: string): slug is MonthlySheetKind => slug in MONTH
  *
  * MORNING BRIEFING reads its live feed here, kept a few minutes
  * (src/data/morningBriefing.ts), so its pages are prerendered and refreshed
- * in the background as the feed changes. KSA's briefing is another report,
- * not built yet (`isBuilt`).
+ * in the background as the feed changes. KSA's briefing is another report
+ * with a feed of its own (src/data/ksaMorningBriefing.ts), read the same way.
  * ========================================================================= */
 
 type Params = Promise<{ edition: string; publication: string }>;
@@ -147,6 +149,12 @@ export default async function Page({ params, searchParams }: { params: Params; s
 
   if (publication.slug === 'currency') {
     return <CurrencyView edition={edition.slug} publication={publication} report={await fetchCurrencyReport()} />;
+  }
+
+  if (publication.slug === 'morning-briefing' && edition.slug === 'ksa') {
+    return (
+      <KsaMorningBriefingView edition={edition} publication={publication} briefing={await fetchKsaMorningBriefing()} />
+    );
   }
 
   if (publication.slug === 'morning-briefing' && isBuilt(edition.slug, publication.slug)) {

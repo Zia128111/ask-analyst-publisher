@@ -166,6 +166,16 @@ export interface Branding {
   bar: string | null;
   /** A report chart's line (BOP: the fiscal year to date), as #rrggbb. Null keeps the palette's second. */
   line: string | null;
+  /**
+   * A report's title where the Report style colours it (KSA's Morning
+   * Briefing), as #rrggbb. Null keeps the design system's blue for text.
+   */
+  heading: string | null;
+  /**
+   * The edition's tag beside a report's date (KSA's Morning Briefing), as
+   * #rrggbb, with ink or white on it by contrast. Null follows the heading.
+   */
+  tag: string | null;
   /** Replaces every report's own source line. '' keeps each report's. */
   source: string;
   /**
@@ -187,6 +197,8 @@ export const DEFAULT_BRANDING: Branding = {
   negative: null,
   bar: null,
   line: null,
+  heading: null,
+  tag: null,
   source: '',
   company: '',
   logo: null,
@@ -195,7 +207,7 @@ export const DEFAULT_BRANDING: Branding = {
 /** The settings "Reset style" puts back. The logo and the company name stay. */
 export const DEFAULT_STYLE: Pick<
   Branding,
-  'font' | 'size' | 'rule' | 'fill' | 'highlight' | 'negative' | 'bar' | 'line' | 'source'
+  'font' | 'size' | 'rule' | 'fill' | 'highlight' | 'negative' | 'bar' | 'line' | 'heading' | 'tag' | 'source'
 > = {
   font: DEFAULT_BRANDING.font,
   size: DEFAULT_BRANDING.size,
@@ -205,6 +217,8 @@ export const DEFAULT_STYLE: Pick<
   negative: DEFAULT_BRANDING.negative,
   bar: DEFAULT_BRANDING.bar,
   line: DEFAULT_BRANDING.line,
+  heading: DEFAULT_BRANDING.heading,
+  tag: DEFAULT_BRANDING.tag,
   source: DEFAULT_BRANDING.source,
 };
 

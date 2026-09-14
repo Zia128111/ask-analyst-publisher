@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { Icons, formatNumber, tokens } from '@akseer/ask-analyst-design-system';
 
-import { AA_GRAPHIC, AA_TEXT, PAPER, contrast, normaliseHex, textOn } from '../../branding/contrast';
+import { AA_GRAPHIC, AA_LARGE, AA_TEXT, PAPER, contrast, normaliseHex, textOn } from '../../branding/contrast';
 import { LOGO_ACCEPT, LogoError, prepareLogo } from '../../branding/logo';
 import { offeredStyle, placementFor, type StyleSetting } from '../../branding/placement';
 import {
@@ -263,9 +263,10 @@ function ColourField({
   info?: string;
   /**
    * What to say under the field about a chosen colour: how text reads on it
-   * (a fill), or how it reads on the white report as text or as a chart mark.
+   * (a fill), or how it reads on the white report as text, as large text (a
+   * title) or as a chart mark.
    */
-  readout?: 'fill' | 'text' | 'mark';
+  readout?: 'fill' | 'text' | 'large' | 'mark';
   /** What an empty field means, as #rrggbb: the design-system default. */
   fallback: string;
   /** That default in words, shown beside its code in the placeholder. */
@@ -363,30 +364,34 @@ function FillReadout({ fill }: { fill: string }) {
 
 /**
  * How a chosen colour reads on the white a report prints on, which every
- * download is: as text, against WCAG's 4.5:1, or as a chart's bar or line,
- * against 3:1 for graphics. Words and an icon, as the fill's readout.
+ * download is: as text, against WCAG's 4.5:1; as a title's large text, or as
+ * a chart's bar or line, against 3:1. Words and an icon, as the fill's
+ * readout.
  */
-function PaperReadout({ colour, use }: { colour: string; use: 'text' | 'mark' }) {
-  const minimum = use === 'text' ? AA_TEXT : AA_GRAPHIC;
+function PaperReadout({ colour, use }: { colour: string; use: 'text' | 'large' | 'mark' }) {
+  const minimum = use === 'text' ? AA_TEXT : use === 'large' ? AA_LARGE : AA_GRAPHIC;
   const ratio = contrast(colour, PAPER);
   const passes = ratio >= minimum;
   const shown = formatNumber(ratio, { decimals: 2 });
   /* "4.5:1" and "3:1", as WCAG writes them. */
   const floor = formatNumber(minimum, { decimals: Number.isInteger(minimum) ? 0 : 1 });
+  const verdict =
+    use === 'mark'
+      ? passes
+        ? `passes the ${floor}:1 chart minimum.`
+        : `below the ${floor}:1 chart minimum. Try a darker shade.`
+      : passes
+        ? use === 'large'
+          ? 'passes AA for large text.'
+          : 'passes AA.'
+        : `below the ${floor}:1 AA minimum${use === 'large' ? ' for large text' : ''}. Try a darker shade.`;
   return (
     <span className={classes.readout} data-passes={passes} role="status">
       <span className={classes.icon}>
         {passes ? <Icons.check size="xs" /> : <Icons.warning size="xs" />}
       </span>
       <span>
-        On white: {shown}:1,{' '}
-        {use === 'text'
-          ? passes
-            ? 'passes AA.'
-            : `below the ${floor}:1 AA minimum. Try a darker shade.`
-          : passes
-            ? `passes the ${floor}:1 chart minimum.`
-            : `below the ${floor}:1 chart minimum. Try a darker shade.`}
+        On white: {shown}:1, {verdict}
       </span>
     </span>
   );
@@ -636,13 +641,27 @@ function ApplyBar({
   );
 }
 
+/** The brand's blue to its deepest, ink, slate and green, for a report's title and its tag. */
+const HEADING_SWATCHES = [
+  tokens.blue[6],
+  tokens.blue[7],
+  tokens.blue[8],
+  tokens.blue[9],
+  tokens.ink,
+  tokens.neutral[7],
+  tokens.green[7],
+];
+
 export function ReportStyleSettings({
   publication,
+  edition,
   closeHeld = false,
   onDone,
 }: {
   /** The publication in view, whose sheet the descriptions describe. */
   publication?: string | null;
+  /** The edition in view: an edition can lay a report of the same name out differently (KSA). */
+  edition?: string | null;
   /** The drawer was asked to close while changes are pending. */
   closeHeld?: boolean;
   /** Close the drawer: called once the pending changes are applied or discarded. */
@@ -650,7 +669,7 @@ export function ReportStyleSettings({
 }) {
   const { branding, dirty } = useBranding();
   const face = fontById(branding.font).stack ?? undefined;
-  const where = placementFor(publication);
+  const where = placementFor(publication, edition);
   const offers = (setting: StyleSetting) => where.offers.has(setting);
   /** What the setting does on the report in view: its info tooltip. */
   const explain = (setting: StyleSetting) => where.describe[setting];
@@ -658,7 +677,7 @@ export function ReportStyleSettings({
   return (
     <SettingsSection label="Report style" hint="Applies to every report and its downloads." stretch>
       <div className={classes.fields}>
-        <FieldGroup title="Table">
+        <FieldGroup title={where.group ?? 'Table'}>
           {offers('size') && (
             <Field label="Table text size" info={explain('size')} labelAs="div">
               {({ labelId, infoId }) => (
@@ -692,6 +711,34 @@ export function ReportStyleSettings({
                 />
               )}
             </Field>
+          )}
+
+          {offers('heading') && (
+            <ColourField
+              label="Heading colour"
+              info={explain('heading')}
+              readout="large"
+              fallback={color['text-link']}
+              fallbackName="text blue"
+              value={branding.heading}
+              swatches={HEADING_SWATCHES}
+              onChange={(heading) => editBranding({ heading })}
+            />
+          )}
+
+          {offers('tag') && (
+            <ColourField
+              label="Tag colour"
+              info={explain('tag')}
+              readout="fill"
+              /* Empty follows the heading colour, so the placeholder names
+                 whichever colour that is now. */
+              fallback={branding.heading ?? color['text-link']}
+              fallbackName={branding.heading ? 'the heading colour' : 'text blue'}
+              value={branding.tag}
+              swatches={HEADING_SWATCHES}
+              onChange={(tag) => editBranding({ tag })}
+            />
           )}
 
           {offers('font') && (

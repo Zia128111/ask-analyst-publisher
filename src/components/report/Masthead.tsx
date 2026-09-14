@@ -26,6 +26,11 @@ import classes from './Masthead.module.css';
  *
  * ASK ANALYST uses the design system's Logo, which follows the scheme itself.
  *
+ * AKSEER heads KSA's reports, as on the live KSA page: its bilingual logo
+ * (akseer, إكسير), public/brand/akseer.png, cropped from the published
+ * briefing and drawn on white edge to edge. It has no dark variant either, so
+ * on the dark scheme that white becomes a plate, as an uploaded logo's does.
+ *
  * CUSTOM is the logo uploaded in the account drawer's Report style, named by
  * the company name given there. An uploaded logo has no dark variant either,
  * so on the dark scheme it sits on a light plate rather than disappearing.
@@ -35,6 +40,9 @@ import classes from './Masthead.module.css';
    the box is right before the stylesheet sizes it exactly. */
 const ALPHA_HEIGHT = 88;
 const ALPHA_WIDTH = Math.round((880 / 269) * ALPHA_HEIGHT);
+
+/* Akseer's logo, 964 × 344, likewise. */
+const AKSEER_WIDTH = Math.round((964 / 344) * ALPHA_HEIGHT);
 
 export interface CustomLogo {
   /** A data: URL. */
@@ -70,6 +78,20 @@ export function Masthead({ brand, custom }: { brand: MastheadChoice; custom?: Cu
           width={ALPHA_WIDTH}
           height={ALPHA_HEIGHT}
           className={classes.onDark}
+        />
+      </span>
+    );
+  }
+
+  if (brand === 'akseer') {
+    return (
+      <span className={classes.slot}>
+        <img
+          src="/brand/akseer.png"
+          alt={MASTHEADS.akseer.attribution}
+          width={AKSEER_WIDTH}
+          height={ALPHA_HEIGHT}
+          className={classes.plated}
         />
       </span>
     );

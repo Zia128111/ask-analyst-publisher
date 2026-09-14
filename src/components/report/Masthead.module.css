@@ -61,8 +61,9 @@
 /* An uploaded logo has no dark variant, so on the dark scheme it sits on a
    plate of the light surface — whatever colours it was drawn in, it stays
    legible, as it would on the printed page. The plate fills the logo's box
-   and the artwork is inset in it. */
-:global([data-mantine-color-scheme='dark']) .slot .custom {
+   and the artwork is inset in it. Akseer's logo, drawn on white to its edges,
+   takes the same plate, so its white does not stop at the artwork. */
+:global([data-mantine-color-scheme='dark']) .slot :is(.custom, .plated) {
   padding: var(--ask-space-2);
   border-radius: var(--ask-radius-md);
   background: var(--report-plate);
@@ -79,7 +80,7 @@
   display: none !important;
 }
 
-:global([data-scheme='light']) .slot .custom {
+:global([data-scheme='light']) .slot :is(.custom, .plated) {
   padding: 0;
   background: none;
 }

@@ -1,3 +1,4 @@
+import { figure, isoDate, list, text, webLink } from './feedValues';
 import type {
   BriefingCommodity,
   BriefingCurrency,
@@ -192,36 +193,6 @@ function isoFromLong(text: string): string {
   if (!match || index < 0) throw new Error(`Unrecognised date "${text}"`);
   return `${match[3]}-${String(index + 1).padStart(2, '0')}-${match[1].padStart(2, '0')}`;
 }
-
-function isoDate(text: string): string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error(`Unrecognised date "${text}"`);
-  return text;
-}
-
-/** A number, or a string holding one ("168865.04"); anything else is no figure. */
-function figure(value: unknown): number | null {
-  const n = typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN;
-  return Number.isFinite(n) ? n : null;
-}
-
-const text = (value: unknown): string => (typeof value === 'string' ? value.trim() : '');
-
-/** Only web links: a story's link opens in a new tab, and must not run script. */
-function webLink(value: unknown): string | null {
-  const href = text(value);
-  if (!href) return null;
-  try {
-    const url = new URL(href);
-    return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : null;
-  } catch {
-    return null;
-  }
-}
-
-const list = <T>(value: unknown): T[] => {
-  if (!Array.isArray(value)) throw new Error('Expected a list');
-  return value as T[];
-};
 
 function normalise(feed: Feed): MorningBriefing {
   const stories: BriefingStory[] = list<FeedStory>(feed.news)

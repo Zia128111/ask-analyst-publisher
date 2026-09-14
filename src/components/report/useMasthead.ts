@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useBranding } from '../../branding/store';
 import { customLogoAlt, customMastheadLabel } from '../../branding/types';
 import { MASTHEADS, PUBLISHER } from '../../data/publications';
-import type { MastheadChoice, Publisher } from '../../data/types';
+import type { Masthead, MastheadChoice, Publisher } from '../../data/types';
 import type { CustomLogo } from './Masthead';
 
 /* ============================================================================
@@ -13,11 +13,11 @@ import type { CustomLogo } from './Masthead';
  * ============================================================================
  * Every publication view starts its masthead the same way: on the edition
  * the reader came in through, so Alpha Capital's report opens under the
- * Alpha Capital logo — or, once a company logo has been uploaded in the
- * Report style, under that logo, which is the point of uploading one. A
- * choice made on the toggle holds until the logo itself changes: uploading a
- * new one shows it straight away. The figures are the same report whichever
- * logo is showing.
+ * Alpha Capital logo and KSA's under Akseer's — or, once a company logo has
+ * been uploaded in the Report style, under that logo, which is the point of
+ * uploading one. A choice made on the toggle holds until the logo itself
+ * changes: uploading a new one shows it straight away. The figures are the
+ * same report whichever logo is showing.
  *
  * It also answers the questions each view's downloads ask: who publishes the
  * report (the Report style's company name, or the publisher), who it goes
@@ -25,6 +25,13 @@ import type { CustomLogo } from './Masthead';
  * slug for file names. `branding` is the style the report shows: the
  * drawer's draft while there is one.
  * ========================================================================= */
+
+/** The built-in logo each edition's reports open under. */
+const EDITION_MASTHEADS: Readonly<Record<string, Masthead>> = {
+  askanalyst: 'askanalyst',
+  alphacapital: 'alphacapital',
+  ksa: 'akseer',
+};
 
 /** "Acme Securities (Pvt) Ltd." -> "acme-securities-pvt-ltd", for file names. */
 export const slug = (text: string) =>
@@ -39,11 +46,7 @@ export function useMasthead(edition: string) {
   /* A choice remembers the logo it was made against, so a new upload
      overrides it without an effect to reset it. */
   const [choice, setChoice] = useState<{ masthead: MastheadChoice; logo: string | null } | null>(null);
-  const automatic: MastheadChoice = branding.logo
-    ? 'custom'
-    : edition === 'askanalyst'
-      ? 'askanalyst'
-      : 'alphacapital';
+  const automatic: MastheadChoice = branding.logo ? 'custom' : (EDITION_MASTHEADS[edition] ?? 'alphacapital');
   const masthead = choice && choice.logo === branding.logo ? choice.masthead : automatic;
 
   const customLogo: CustomLogo | undefined = branding.logo

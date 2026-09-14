@@ -1,0 +1,112 @@
+/*
+ * The benchmark's topic table, measured on the live page (2026-09-14): the
+ * headings 18px semibold over a rule; rows 57px tall — the 14px topic with
+ * 20px of space above and below — each closing on a rule; the category column
+ * about three grid columns wide at the inline-end, its text at the end; the
+ * category 13px bold, then the reading in green or red.
+ *
+ * Here in the colours every sheet uses (this report offers no border or text
+ * colours): the rules the brand blue, the text the system's secondary, the
+ * readings its positive and negative text colours; on the system's steps:
+ * headings font-md, topics and categories font-xs (the 14px floor for data;
+ * the benchmark's categories are 13px), rows space-5 of padding. The first
+ * and last cells sit flush with the sheet's edges.
+ *
+ * The topics are links, so they are underlined (§8.9) — a light rule under
+ * text in the table's own colour, deepening to the link blue on hover —
+ * where the benchmark marks them not at all.
+ */
+.table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--ask-font-xs);
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-secondary);
+}
+
+.table th,
+.table td {
+  padding-inline: var(--ask-space-2);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.table thead th {
+  padding-block: var(--ask-space-1) var(--ask-space-2);
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+  font-size: var(--ask-font-md);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ask-text-secondary);
+}
+
+.table tbody td {
+  padding-block: var(--ask-space-5);
+  border-block-end: var(--ask-border-thin) solid var(--report-rule, var(--ask-border-brand));
+}
+
+.table tbody tr:hover > td {
+  background: var(--ask-bg-hover);
+}
+
+/* The category column: three grid columns and their gutters, at the end. */
+.table .category {
+  inline-size: calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter) * 2);
+  text-align: end;
+  white-space: nowrap;
+}
+
+.table :is(th, td):first-child {
+  padding-inline-start: 0;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--ask-border-default);
+  text-decoration-thickness: var(--ask-border-thin);
+  text-underline-offset: 0.2em;
+  transition:
+    color var(--ask-duration-fast) var(--ask-ease-standard),
+    text-decoration-color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.link:hover {
+  color: var(--ask-text-link);
+  text-decoration-color: currentColor;
+}
+
+.categoryName,
+.reading {
+  font-weight: 700;
+}
+
+.bar {
+  color: var(--ask-text-tertiary);
+}
+
+.reading[data-tone='positive'] {
+  color: var(--ask-positive-text);
+}
+
+.reading[data-tone='negative'] {
+  color: var(--ask-negative-text);
+}
+
+/* On a phone-width sheet the category may wrap, so the topic keeps room. */
+@container sheet (max-width: 639px) {
+  .table .category {
+    inline-size: auto;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

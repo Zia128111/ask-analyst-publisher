@@ -44,6 +44,14 @@ import { DEFAULT_STYLE, type Branding } from './types';
  *   highlight (no column is current), no negative colour (printed as the
  *   text), no chart and no source line (every story links its own source).
  *
+ *   KSA'S MORNING BRIEFING, a report of its own, offers only the logo, the
+ *   heading colour and the tag colour — the user's list for this screen
+ *   (2026-09-14). Its header is the benchmark's (the KSA tag, the date, the
+ *   title and Akseer's logo) over a table of topics whose look stays the
+ *   system's. It is found by edition as well as by name
+ *   (`ksa/morning-briefing`), since the other editions' Morning Briefing is
+ *   another sheet, and its fields sit under "Header" in the drawer.
+ *
  *   TRADE-PBS offers what its screen shows (the user: "Adjust drawer filters
  *   accordingly"): MTS's list — company name, logo, typeface, text size,
  *   rules, the fill of the bands and header, and the source, whose line
@@ -107,6 +115,8 @@ export type StyleSetting =
   | 'negative'
   | 'bar'
   | 'line'
+  | 'heading'
+  | 'tag'
   | 'source';
 
 export interface Placement {
@@ -114,6 +124,8 @@ export interface Placement {
   offers: ReadonlySet<StyleSetting>;
   /** What each setting does on this report: its info tooltip. */
   describe: Readonly<Record<StyleSetting, string>>;
+  /** The heading over the report's own fields in the drawer; "Table" where unset. */
+  group?: string;
 }
 
 /*
@@ -133,6 +145,8 @@ const EXPLAIN: Record<StyleSetting, string> = {
   negative: 'Colours the negative figures in the table.',
   bar: 'Colours the bars in the chart.',
   line: 'Colours the line in the chart.',
+  heading: 'Colours the report’s title.',
+  tag: 'Fills the tag beside the date.',
   source: 'Sets the source line under the report.',
 };
 
@@ -171,6 +185,16 @@ const PLACEMENTS: Record<string, Placement> = {
       fill: 'Fills every other row of the tables.',
     },
   },
+  'ksa/morning-briefing': {
+    offers: new Set(['logo', 'heading', 'tag']),
+    group: 'Header',
+    describe: {
+      ...EXPLAIN,
+      logo: 'Replaces the Akseer logo at the top.',
+      heading: 'Colours the Morning Briefing title.',
+      tag: 'Fills the KSA tag beside the date.',
+    },
+  },
   'trade-pbs': GENERAL,
   'trade-sbp': {
     offers: new Set(['company', 'logo', 'font', 'size', 'rule', 'fill', 'highlight', 'source']),
@@ -200,8 +224,14 @@ const PLACEMENTS: Record<string, Placement> = {
   },
 };
 
-export const placementFor = (publication: string | null | undefined): Placement =>
-  (publication ? PLACEMENTS[publication] : undefined) ?? GENERAL;
+/**
+ * The report in view's placement: its edition's own entry where there is
+ * one (`ksa/morning-briefing`), else the report's, else MTS's.
+ */
+export const placementFor = (publication: string | null | undefined, edition?: string | null): Placement =>
+  (publication
+    ? ((edition ? PLACEMENTS[`${edition}/${publication}`] : undefined) ?? PLACEMENTS[publication])
+    : undefined) ?? GENERAL;
 
 type StyleKey = keyof typeof DEFAULT_STYLE;
 const STYLE_KEYS = Object.keys(DEFAULT_STYLE) as StyleKey[];

@@ -111,7 +111,7 @@ export function AppShell({ edition, children }: { edition: string; children: Rea
           </nav>
 
           <div className={classes.topbarEnd}>
-            <AccountMenu publication={publication} />
+            <AccountMenu publication={publication} edition={edition} />
           </div>
         </header>
 

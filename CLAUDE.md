@@ -89,12 +89,15 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   its entry in `PUBLICATIONS` and its slug in a group of `NAV_GROUPS` (the
   sidebar; an edition's routes come from the groups, so a slug in no group has
   no page), its slug in `BUILT_PUBLICATIONS` (and `PENDING_IN_EDITION` for an edition
-  whose report of that name is a different one — `isBuilt(edition, slug)`:
-  KSA's Morning Briefing), and a branch in the route's `page.tsx`;
+  whose report of that name is a different one not built yet —
+  `isBuilt(edition, slug)`; none today), and a branch in the route's `page.tsx`;
   an entry in `src/branding/placement.ts` if its sheet offers different
-  Report style settings from MTS. Views share `useMasthead` (which logo,
-  who publishes) and `sheetDownloads` (the three formats). Until then its
-  sidebar link opens `PendingPublicationView`, never a 404.
+  Report style settings from MTS. An edition's own report under a shared
+  name (KSA's Morning Briefing) gets a branch that tests the edition and a
+  placement keyed `edition/slug`, which `placementFor(slug, edition)` looks
+  up first. Views share `useMasthead` (which logo, who publishes) and
+  `sheetDownloads` (the three formats). Until then its sidebar link opens
+  `PendingPublicationView`, never a 404.
 - **Three navigations, three jobs.** Header links = editions (URL segment);
   the sidebar = publications (URL segment, links in a `<nav>`, NOT the Tabs
   component, because each is its own page); the toggle above the sheet =
@@ -544,8 +547,8 @@ The day's briefing — the stories, and the markets of the session before —
   `commodities`, `currency` ("USD" read "PKR/USD"); `announcement` and `pdf`
   unused. A story's link is kept only if it is http(s).
 - **KSA's Morning Briefing is a different report** (feed `api/ksa/msg/mb`:
-  topics with a category and a sentiment) and stays pending
-  (`isBuilt`); its page offers no link back to itself.
+  topics with a category and a sentiment), built as a page of its own — see
+  "KSA Morning Briefing" below.
 - **Layout**: the FULL grid, 12 columns (the user's call, made when a row of
   tabs spanned the page; beside the docked sidebar it fits from about 1,660px
   of screen, and narrower it stacks as below) — the stories 8 columns, the tables 4 (420px). Its
@@ -612,6 +615,66 @@ The day's briefing — the stories, and the markets of the session before —
   three icons and links the day's published PDF); 14px text (13px); the
   system's colours; the corrected currency signs; no announcements (the
   feed's list was empty and the live page prints none).
+
+## KSA Morning Briefing
+
+KSA's own briefing, its only page (`KsaMorningBriefingView`), recreated from
+the user's screenshot of the live /ksa/morning-briefing page ("Now make this
+morning briefing page in ksa tab. its the only there"):
+
+- **Data** (`src/data/ksaMorningBriefing.ts`): the LIVE feed
+  `api.askanalyst.com.pk/api/ksa/msg/mb`, read on the server as the Pakistan
+  briefing's is (`revalidate` 300s, 8s timeout; the copy transcribed on 14
+  Sep 2026 when the feed fails, changes shape or sends no topics). A plain
+  list of topics: `title`, `sector` (the category), `type` ("Positive",
+  "Negative", "Neutral": the reading, printed verbatim, its tone taken from
+  the word), `date` (the briefing's day), `position`, `link` (http(s) only);
+  `description`, `filename` (the day's PDF), `classification` and the
+  timestamps are unused. The value checks both briefings share are in
+  `src/data/feedValues.ts`.
+- **Header** (`KsaBriefingLetterhead`), measured on the live page: the
+  edition's tag "KSA" on a pill (16px medium, 33px tall), a faint dot and the
+  date ("14 September, 2026", as written there); the title 30px semibold
+  (33px live, the type scale's step under it); Akseer's bilingual logo
+  (akseer, إكسير) at the inline-end, its box the two lines' height (78.6px),
+  its foot level with the title's; 40px down to the table. No bands, no
+  rules. The logo is a new built-in masthead, `akseer`
+  (`public/brand/akseer.png`, cropped earlier from the Pakistan briefing's
+  PDF and drawn on white, so it sits on a plate in dark mode). KSA opens under
+  it (`useMasthead`) with no switch, as live, until a logo is uploaded, which
+  adds "Akseer | <company>".
+- **Table** (`TopicTable`): Topic | Category, the category column three grid
+  columns wide at the end; headings 18px semibold over a rule; rows 58px (57px
+  live: 14px text with space-5 above and below), each closing on a rule;
+  topics link to their stories in a new tab and are UNDERLINED (§8.9; the
+  live page does not mark them); the category bold, a bar (hidden from
+  screen readers, read as a comma), then the reading bold in the system's
+  positive or negative colour, a neutral one in the text colour. The colours
+  are the system's — brand-blue rules, secondary text, title and tag in the
+  text blue (#0A6FDB) — not the live page's steel blue (#386090) and greys,
+  following the Pakistan briefing's "use our blue".
+- **Layout**: the full grid (12 columns, 1300px; 1235px live). On a phone the
+  logo takes a line of its own above the text and the categories wrap.
+- **Drawer: ONLY the logo, the heading colour and the tag colour** (the
+  user's list, 2026-09-14), under a "Header" group. Two Report style settings
+  were made for it, `heading` and `tag`: the title's colour (its readout on
+  white against 3:1, large text) and the tag's fill (ink or white on it, the
+  ratio shown); the tag follows the heading until it has a colour of its
+  own. The placement is keyed by edition, `ksa/morning-briefing`, since the
+  other editions' Morning Briefing is another sheet: `placementFor(slug,
+  edition)` looks it up first, and `AccountMenu` passes the edition to the
+  drawer.
+- **Downloads**: PNG 2664px wide; PDF one A4 LANDSCAPE page, as a full-grid
+  sheet prints; Excel (`src/exports/ksaBriefingWorkbook.ts`), one sheet
+  "Morning Briefing": the tag's word in the tag colour where that reads on
+  white, the date, who it goes out under, the title in the heading colour,
+  then Topic (a real link), Category (bold) and Sentiment (coloured, a column
+  of its own to sort by), with rules, headings frozen at row 7, landscape.
+  Read back via COM; axe clean in light, dark and at 375px.
+- **Deviations from the benchmark**: the Download menu (the live page links
+  the day's published PDF); the system's colours; the 30px title and 14px
+  categories (33px and 13px live); underlined topic links; a logo switch once
+  a logo is uploaded.
 
 ## Trade-PBS (Balance of Trade)
 
@@ -1030,7 +1093,9 @@ refresh keeps their choice):
   MTS's list plus the highlight. Portfolio Investment likewise: MTS's list,
   the highlight (its main table's Net column) and the bar colour. The
   Morning Briefing: logo, font, size, border and fill (no company name: its
-  header has no band). Trade-PBS: MTS's list (its table tints and colours
+  header has no band); KSA's Morning Briefing only the logo, the heading
+  colour and the tag colour, under a "Header" group (the user's list).
+  Trade-PBS: MTS's list (its table tints and colours
   nothing beyond the header), and Settlement and Cement the same. Trade-SBP: Oil Marketing's list (MTS's and
   the highlight on its tinted columns), and Central Government Debt, Fertilizer, Auto and Currency (its USD column) the same. Remittance: Oil Marketing's list and, under Chart, the bar
   and line colours. The drawer shows only what the report in view offers;
@@ -1127,8 +1192,13 @@ refresh keeps their choice):
 | Negative figures colour | BOP | negative amounts in the table and the Excel cells; on a highlight, kept only where it reads | any colour; empty = negative red (#B91C1C, the scheme's in dark); ratio on white shown |
 | Bar colour | BOP, Portfolio Investment, Remittance | the chart's bars on screen; Portfolio Investment's and Remittance's Excel charts; Remittance's PNG/PDF | any colour; empty = palette blue (#1485FF); ratio on white shown |
 | Line colour | BOP, Remittance | BOP's fiscal-year line and dots; Remittance's YoY line, in its downloads too | any colour; empty = palette orange (#EA580C); ratio on white shown |
+| Heading colour | KSA's Morning Briefing | its title, on screen and in every download; the workbook's title | any colour; empty = text blue (#0A6FDB, the scheme's in dark); ratio on white against 3:1 (large text) shown |
+| Tag colour | KSA's Morning Briefing | the KSA tag's fill, ink or white on it; the tag's word in the workbook where it reads on white | any colour; empty follows the heading colour; ratio shown |
 | Source | MTS, Oil Marketing, Portfolio Investment, Trade-PBS, Trade-SBP, Settlement, Remittance, Central Government Debt, Cement, Fertilizer, Currency, Auto | the source line, on screen and in every download | empty = each report's own |
 
+- **"All" in the table** (font, text size, border, fill) means every report
+  but KSA's Morning Briefing, whose drawer offers only the logo, the heading
+  colour and the tag colour.
 - **Code**: `src/branding/` (types, contrast, CSS variables, logo processing,
   font imports, the store) and `src/data/branding.ts` (storage: localStorage,
   one key for the settings and one for the logo, validated field by field on

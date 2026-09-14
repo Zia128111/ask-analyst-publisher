@@ -47,9 +47,10 @@ export interface Publisher {
 /**
  * The brand a report sheet is printed under, chosen with the toggle above
  * the sheet. Each has its own logo; the Alpha Capital one carries both SECP
- * registrations inside the artwork.
+ * registrations inside the artwork. Akseer's bilingual logo heads KSA's
+ * reports.
  */
-export type Masthead = 'alphacapital' | 'askanalyst';
+export type Masthead = 'alphacapital' | 'askanalyst' | 'akseer';
 
 /**
  * What the masthead toggle can print a sheet under: a built-in masthead, or
@@ -411,6 +412,30 @@ export interface MorningBriefing {
   indices: BriefingIndex[];
   commodities: BriefingCommodity[];
   currencies: BriefingCurrency[];
+}
+
+/** How a KSA topic's reading is set: the positive or negative colour, or the text's. */
+export type TopicTone = 'positive' | 'negative' | 'neutral';
+
+/** One topic in KSA's Morning Briefing. */
+export interface BriefingTopic {
+  id: number;
+  title: string;
+  /** "Economy", "Real Estate Mgmt & Dev't". */
+  category: string;
+  /** The reading for the market, in the feed's own word: "Positive", "Negative", "Neutral". */
+  sentiment: string;
+  /** How that word is set; a word the page does not know reads neutral. */
+  tone: TopicTone;
+  /** The story on its publisher's site; http(s) only, else null. */
+  link: string | null;
+}
+
+/** KSA's Morning Briefing: the day's topics, each with its category and its reading. */
+export interface KsaMorningBriefing {
+  /** The briefing's day. ISO date. */
+  asOf: string;
+  topics: BriefingTopic[];
 }
 
 /** One company's latest published result, with its share price. */

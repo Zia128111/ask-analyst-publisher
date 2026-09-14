@@ -17,6 +17,7 @@ export const PUBLISHER: Publisher = {
  * says in words: the alt text on screen, and the attribution line in the
  * Excel download, which cannot carry the logo. The Alpha Capital artwork
  * draws both SECP registrations: Alpha Capital REP-004, Akseer REP-400 R.
+ * Akseer's bilingual logo heads KSA's reports, as on the live KSA page.
  */
 export const MASTHEADS: Record<Masthead, { label: string; attribution: string }> = {
   alphacapital: {
@@ -24,6 +25,7 @@ export const MASTHEADS: Record<Masthead, { label: string; attribution: string }>
     attribution: 'Alpha Capital, REN # REP - 004, and Akseer Research, REN # REP - 400 R',
   },
   askanalyst: { label: 'Ask Analyst', attribution: 'Ask Analyst' },
+  akseer: { label: 'Akseer', attribution: 'Akseer' },
 };
 
 /**
@@ -129,14 +131,12 @@ export const BUILT_PUBLICATIONS = new Set([
 ]);
 
 /*
- * Built publications an edition does not print yet. KSA's Morning Briefing
- * is a report of its own — the live page reads api/ksa/msg/mb, a list of
- * topics with a category — not the Pakistan briefing the other editions
- * share, so it keeps the "not built" page until it is designed.
+ * Built publications an edition does not print yet, where the edition's
+ * report of that name is a different one: none today. KSA's Morning Briefing
+ * was one until it was built as a report of its own (2026-09-14,
+ * src/views/KsaMorningBriefingView.tsx).
  */
-const PENDING_IN_EDITION: Record<string, ReadonlySet<string>> = {
-  ksa: new Set(['morning-briefing']),
-};
+const PENDING_IN_EDITION: Record<string, ReadonlySet<string>> = {};
 
 /** Whether an edition's publication has its page. */
 export const isBuilt = (edition: string, publication: string) =>

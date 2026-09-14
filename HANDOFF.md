@@ -13,7 +13,19 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   **MTS**, **Latest Result**, **BOP**, **Oil Marketing**, **Portfolio Investment**,
   **Morning Briefing**, **Trade-PBS**, **Trade-SBP**, **Settlement**, **Remittance**,
   **Central Government Debt**, **Cement**, **Fertilizer**, **Currency** and **Auto** — every
-  publication tab; only KSA's briefing (a different report) shows a pending page.
+  publication tab — and **KSA's Morning Briefing**; no page is pending.
+- **KSA Morning Briefing** (2026-09-14, from the user's screenshot of the live
+  /ksa/morning-briefing page): a report of its own on its LIVE feed `api/ksa/msg/mb` (server
+  fetch, 5 min, transcribed fallback of 14 Sep; `src/data/ksaMorningBriefing.ts`, value checks
+  shared with the Pakistan briefing in `src/data/feedValues.ts`). `KsaMorningBriefingView`: the
+  benchmark's header (`KsaBriefingLetterhead`: KSA pill, dot, date, 30px title, Akseer's
+  bilingual logo — a new `akseer` masthead, `public/brand/akseer.png`) over `TopicTable` (topics
+  as links; category bold, then Positive/Negative/Neutral in the DS colours), full grid. Drawer =
+  ONLY logo, heading colour and tag colour (the user's list): two new Report style settings,
+  `heading` and `tag` (the tag follows the heading until set), placement keyed
+  `ksa/morning-briefing` (`placementFor(publication, edition)`), fields under a "Header" group.
+  An uploaded logo adds an "Akseer | <company>" switch. Downloads: PNG 2664px, PDF one A4
+  landscape page, Excel one sheet with the links. Axe clean in light, dark and at 375px.
 - **Publication sidebar** (2026-09-14, the user's designs and sequence): the row of tabs is gone.
   Second pass after the user's reference ("enhance the view… logo above it"): a full-height
   sidebar with the logo at its head beside the app's own top bar (one 64px frame line), a quick

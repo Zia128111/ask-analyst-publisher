@@ -1,0 +1,91 @@
+/*
+ * The benchmark's header, measured on the live page (2026-09-14): the tag in
+ * 16px medium on a pill 33px tall (8px by 16px of padding), a faint dot and
+ * the date (16px, grey) on one line; the title (33px semibold) under them;
+ * the logo at the inline-end, its foot level with the title's; 40px of space
+ * down to the table. Here on the system's steps: the pill's padding space-2
+ * by space-4 and full radius; the dot a space-1 circle in the decorative
+ * border grey, a space-3 either side; the title 30px (font-2xl), the type
+ * scale's step under 33px; a space-3 between the two lines; space-10 under
+ * them. The logo's box is the two lines' height (`--letterhead-block`; the
+ * box rules are Masthead.module.css's).
+ */
+.letterhead {
+  --tag-block: calc(var(--ask-font-sm) * var(--ask-leading-tight) + 2 * var(--ask-space-2));
+  --title-block: calc(var(--ask-font-2xl) * var(--ask-leading-tight));
+  --letterhead-block: calc(var(--tag-block) + var(--ask-space-3) + var(--title-block));
+
+  display: flex;
+  flex-wrap: wrap-reverse;
+  /* `end`, not `flex-end`: wrap-reverse would turn flex-end into the top. */
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--ask-space-2) var(--ask-space-4);
+  padding-block-end: var(--ask-space-10);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ask-space-3);
+  min-inline-size: 0;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ask-space-3);
+  margin: 0;
+}
+
+/* The Report style's tag colour, with ink or white chosen to read on it;
+   unset, the heading's colour, else the system's blue for text with the
+   scheme's inverse text on it (white on light, ink on dark). */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--tag-block);
+  padding-inline: var(--ask-space-4);
+  border-radius: var(--ask-radius-full);
+  background: var(--report-tag, var(--ask-text-link));
+  color: var(--report-on-tag, var(--ask-text-inverse));
+  font-size: var(--ask-font-sm);
+  font-weight: 500;
+  line-height: var(--ask-leading-tight);
+  white-space: nowrap;
+}
+
+.dot {
+  flex: none;
+  inline-size: var(--ask-space-1);
+  block-size: var(--ask-space-1);
+  border-radius: var(--ask-radius-full);
+  background: var(--ask-border-default);
+}
+
+.date {
+  font-size: var(--ask-font-sm);
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-tertiary);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ask-font-2xl);
+  font-weight: 600;
+  line-height: var(--ask-leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--report-heading, var(--ask-text-link));
+}
+
+/* On a phone-width sheet the logo takes a line of its own above the text, as
+   on every letterhead. A container query, so the full-width export copy never
+   stacks. */
+@container sheet (max-width: 639px) {
+  .letterhead {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+}

@@ -64,6 +64,9 @@ export function textOn(fill: string): TextOnFill {
 /** WCAG AA for graphics — a chart's bars and lines. */
 export const AA_GRAPHIC = 3;
 
+/** WCAG AA for large text, 24px or 18.66px bold — a report's title. */
+export const AA_LARGE = 3;
+
 /** The white a report prints on, which every download is. */
 export const PAPER = tokens.semanticLight['bg-surface'];
 

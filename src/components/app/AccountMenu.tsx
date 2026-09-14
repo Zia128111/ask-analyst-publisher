@@ -37,7 +37,15 @@ import classes from './AccountMenu.module.css';
  * is decorative; the chevron says "this opens something".
  * ========================================================================= */
 
-export function AccountMenu({ publication }: { publication?: string | null }) {
+export function AccountMenu({
+  publication,
+  edition,
+}: {
+  /** The publication in view, which sets what the Report style offers. */
+  publication?: string | null;
+  /** The edition in view: KSA lays its Morning Briefing out as a report of its own. */
+  edition?: string | null;
+}) {
   const router = useRouter();
   const { dirty } = useBranding();
   const [opened, setOpened] = useState(false);
@@ -117,7 +125,7 @@ export function AccountMenu({ publication }: { publication?: string | null }) {
             <ColorSchemeToggle />
           </SettingsSection>
 
-          <ReportStyleSettings publication={publication} closeHeld={closeHeld} onDone={close} />
+          <ReportStyleSettings publication={publication} edition={edition} closeHeld={closeHeld} onDone={close} />
 
           <Button fullWidth onClick={leave} loading={leaving}>
             Sign out

@@ -96,6 +96,8 @@ export function readBranding(): Branding {
     negative: colour(saved.negative),
     bar: colour(saved.bar),
     line: colour(saved.line),
+    heading: colour(saved.heading),
+    tag: colour(saved.tag),
     source: text(saved.source, SOURCE_MAX_LENGTH),
     company: text(saved.company, COMPANY_MAX_LENGTH),
     logo: logo && LOGO_DATA_URL.test(logo) ? logo : null,
@@ -133,6 +135,8 @@ export function writeSettings(b: Branding): SaveResult {
     negative: b.negative,
     bar: b.bar,
     line: b.line,
+    heading: b.heading,
+    tag: b.tag,
     source: b.source,
     company: b.company,
   };
