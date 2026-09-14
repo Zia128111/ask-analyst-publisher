@@ -25,6 +25,8 @@
   --sidebar-row: calc(var(--ask-control-sm) + var(--ask-space-1));
   --sidebar-surface: color-mix(in srgb, var(--ask-text-primary) 3%, var(--ask-bg-page));
   --sidebar-hover: color-mix(in srgb, var(--ask-text-primary) 6%, var(--ask-bg-page));
+  /* A light rule a shade firmer, for the search's edge under the pointer. */
+  --sidebar-rule-hover: color-mix(in srgb, var(--ask-border-default), var(--ask-border-strong) 40%);
 
   display: flex;
   flex-direction: column;
@@ -107,13 +109,43 @@
   scale: -1 1;
 }
 
+/*
+ * THE SEARCH. The first one read heavy (the user, 2026-09-14): a 40px form
+ * field in 16px type under the controls' dark 3:1 rule, darker than anything
+ * else in the panel. Now a quiet field a row tall, after the user's reference:
+ * white on the grey panel under a light rule and the faintest shadow, 14px
+ * type, the magnifier over the sections' icons and the words in line with
+ * their headings (its start section is a heading's icon and padding wide).
+ *
+ * The light rule is allowed: WCAG 1.4.11 asks 3:1 of a boundary only where
+ * the boundary is what identifies the control, and this field is known by its
+ * magnifier and its words, both over 7:1. Focus still draws the system's
+ * ring. Touch keeps 16px, which stops iOS zooming the page on focus.
+ */
 .search {
   flex: none;
-  padding: var(--ask-space-3) var(--ask-space-3) var(--ask-space-1);
+  padding: var(--ask-space-3) var(--ask-space-3) var(--ask-space-2);
 }
 
-.searchInput {
-  background: var(--ask-bg-surface);
+.search .searchInput {
+  --input-bd: var(--ask-border-default);
+  --input-height: var(--sidebar-row);
+
+  block-size: var(--sidebar-row);
+  min-block-size: var(--sidebar-row);
+  font-size: var(--ask-font-xs);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.search .searchInput:hover:not(:focus) {
+  --input-bd: var(--sidebar-rule-hover);
+}
+
+/* The system's ring, which the field's own shadow would otherwise replace. */
+.search .searchInput:is(:focus, :focus-within) {
+  --input-bd: var(--ask-border-focus);
+  border-color: var(--ask-border-focus);
+  box-shadow: 0 0 0 var(--ask-border-thin) var(--ask-border-focus);
 }
 
 .clear {
@@ -129,6 +161,11 @@
 .clear:hover {
   background: var(--sidebar-hover);
   color: var(--ask-text-primary);
+}
+
+/* The rail's search button (below); the open sidebar has the field. */
+.railSearch {
+  display: none;
 }
 
 /* The publications scroll on their own under the head and the search. */
@@ -318,7 +355,7 @@
 
 /* In the drawer: no panel of its own; the drawer's body scrolls. */
 .sidebar[data-variant='drawer'] .search {
-  padding: 0 0 var(--ask-space-1);
+  padding: 0 0 var(--ask-space-2);
 }
 
 .sidebar[data-variant='drawer'] .nav {
@@ -329,9 +366,10 @@
 /*
  * THE RAIL: the docked sidebar collapsed to 64px (a 40px square and the
  * padding). Its head shows only the Ask Analyst mark, which gives way to the
- * expand arrows on hover or focus; below it, the groups' icons alone, the
- * group holding the page in the brand tint. Names stay in
- * the buttons, hidden, and tooltips show them.
+ * expand arrows on hover or focus; under it the search, a square drawn as the
+ * field is (the user's reference keeps it in the rail); then the groups'
+ * icons, the group holding the page in the brand tint. Names stay in the
+ * buttons, hidden; a group's button opens its flyout (below).
  */
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] {
   inline-size: calc(var(--ask-control-md) + 2 * var(--ask-space-3));
@@ -343,7 +381,7 @@
 }
 
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .brand,
-:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .search,
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .searchField,
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .chevron,
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .items {
   display: none;
@@ -371,14 +409,43 @@
   display: block;
 }
 
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .search {
+  display: flex;
+  justify-content: center;
+  padding-inline: 0;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .railSearch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ask-control-md);
+  block-size: var(--ask-control-md);
+  border: var(--ask-border-thin) solid var(--ask-border-default);
+  border-radius: var(--ask-radius-md);
+  background: var(--ask-bg-surface);
+  box-shadow: var(--mantine-shadow-xs);
+  color: var(--ask-text-secondary);
+  transition:
+    border-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .railSearch:hover {
+  border-color: var(--sidebar-rule-hover);
+  color: var(--ask-text-primary);
+}
+
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionToggle {
   justify-content: center;
   min-block-size: var(--ask-control-md);
   padding-inline: 0;
 }
 
-:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionToggle:hover {
+/* Hovered, or its flyout open. */
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionToggle:is(:hover, [data-expanded]) {
   background: var(--sidebar-hover);
+  color: var(--ask-text-primary);
 }
 
 :global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .section[data-current] .sectionToggle {
@@ -393,6 +460,114 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/*
+ * THE FLYOUT: a group's card beside the rail (the user's reference,
+ * 2026-09-14) — white, rounded and lifted (Menu's radius lg and shadow lg);
+ * the group's name level with its icon; its publications hanging from a line
+ * under the name on rounded branches, as they hang in the open sidebar, the
+ * page in view in the brand tint. It lives in a portal, outside .sidebar, so
+ * it sets its own measures. At least two grid columns and a gutter wide.
+ */
+.flyout[data-menu-dropdown] {
+  --flyout-row: calc(var(--ask-control-sm) + var(--ask-space-1));
+  --flyout-hover: color-mix(in srgb, var(--ask-text-primary) 6%, var(--ask-bg-surface));
+  --popover-border-color: var(--ask-border-subtle);
+  --tree-spine: var(--ask-space-3);
+  --tree-branch: var(--ask-space-3);
+  --tree-curve: var(--ask-radius-md);
+  --tree-line: var(--ask-border-thin) solid var(--ask-border-default);
+
+  min-inline-size: calc(var(--ask-grid-column) * 2 + var(--ask-grid-gutter));
+  padding: var(--ask-space-2);
+  background-color: var(--ask-bg-surface);
+  border-color: var(--ask-border-subtle);
+  color: var(--ask-text-primary);
+}
+
+/* The group's name, as the open sidebar sets it. Its line box is the icon
+   button's height less the card's padding, pulled up by the card's rule, so
+   the name centres on the icon beside it. */
+.flyoutHeading {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(var(--ask-control-md) - 2 * var(--ask-space-2));
+  margin-block-start: calc(-1 * var(--ask-border-thin));
+  padding-inline: var(--ask-space-3);
+  font-size: var(--ask-font-2xs);
+  font-weight: 600;
+  line-height: var(--ask-leading-snug);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ask-text-tertiary);
+  user-select: none;
+}
+
+/* The line stands under the name's first letter and runs to where the last
+   branch curves away from it. */
+.flyoutItems {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ask-space-1) / 2);
+  padding-block-start: var(--ask-space-1);
+  padding-inline-start: calc(var(--tree-spine) + var(--tree-branch) + var(--ask-space-1));
+}
+
+.flyoutItems::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: var(--tree-spine);
+  inset-block-start: 0;
+  inset-block-end: calc(var(--flyout-row) / 2 + var(--tree-curve));
+  border-inline-start: var(--tree-line);
+}
+
+.flyout .flyoutItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--flyout-row);
+  padding-block: 0;
+  padding-inline: var(--ask-space-3);
+  border-radius: var(--ask-radius-md);
+  background-color: transparent;
+  font-size: var(--ask-font-xs);
+  font-weight: 500;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+/* A branch, as in the open sidebar. */
+.flyout .flyoutItem::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1 * (var(--tree-branch) + var(--ask-space-1)));
+  inset-block-start: calc(50% - var(--tree-curve));
+  inline-size: var(--tree-branch);
+  block-size: var(--tree-curve);
+  border-inline-start: var(--tree-line);
+  border-block-end: var(--tree-line);
+  border-end-start-radius: var(--tree-curve);
+  pointer-events: none;
+}
+
+.flyout .flyoutItem:is(:hover, :focus-visible) {
+  background-color: var(--flyout-hover);
+  color: var(--ask-text-primary);
+}
+
+.flyout .flyoutItem[aria-current='page'] {
+  background-color: var(--ask-bg-brand-subtle);
+  color: var(--ask-text-link);
+  font-weight: 600;
 }
 
 /* Names in the rail and on the collapse button, in the scheme's own tooltip
@@ -424,8 +599,17 @@
     --sidebar-row: var(--ask-touch-target);
   }
 
+  .flyout[data-menu-dropdown] {
+    --flyout-row: var(--ask-touch-target);
+  }
+
   .sectionToggle {
     min-block-size: var(--ask-touch-target);
+  }
+
+  /* 16px, or iOS zooms the page when the field takes focus. */
+  .search .searchInput {
+    font-size: var(--ask-font-sm);
   }
 }
 
@@ -436,14 +620,17 @@
   .sectionToggle,
   .chevron,
   .item,
-  .itemIcon {
+  .itemIcon,
+  .railSearch,
+  .flyout .flyoutItem {
     transition: none;
   }
 }
 
 /* Forced colours strip the tints: outline the page in view instead. */
 @media (forced-colors: active) {
-  .item[aria-current='page'] {
+  .item[aria-current='page'],
+  .flyout .flyoutItem[aria-current='page'] {
     outline: var(--ask-border-thick) solid;
     outline-offset: calc(-1 * var(--ask-border-thick));
   }

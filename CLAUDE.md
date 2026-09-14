@@ -111,7 +111,7 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   landmark and the editions as nav items with aria-current, and sits sticky
   on `--ask-z-raised` — above the page's sticky cells, under Mantine's
   overlays, so drawers open over it (finding 9).
-- **The publication sidebar** (`PublicationSidebar`), the user's two designs
+- **The publication sidebar** (`PublicationSidebar`), the user's designs
   (2026-09-14). Groups in `NAV_GROUPS`, in the user's order: Market (MTS,
   Portfolio Investment, Settlement), Research (Morning Briefing), Companies
   (Latest Result), Economy (BOP, Trade-PBS, Trade-SBP, Remittance, Central
@@ -125,7 +125,16 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   the page (#f7f7f7), hover 6%. The head: the lockup, linking to the edition's first publication,
   and a collapse button. Then a quick search that narrows the list by a
   publication's or a group's name (a hidden status says how many are left;
-  Escape clears it). Then sections under small capital headings with the
+  Escape clears it) — a quiet field a row tall (36px, 44px on touch): white
+  on the grey under a light rule (border-default) and the faintest shadow,
+  14px type (16px on touch, or iOS zooms), its magnifier over the sections'
+  icons and its words in line with their headings (a 40px start section).
+  The user found the first one heavy (2026-09-14): the system's input
+  contract, 40px in 16px type under the dark 3:1 rule. The light rule is a
+  deliberate departure from that contract: WCAG 1.4.11 asks 3:1 of a
+  boundary only where the boundary identifies the control, and this field
+  is known by its magnifier and its words (7.4:1); focus keeps the system's
+  ring. Then sections under small capital headings with the
   group's icon (the user asked for them), spaced apart with no rules between
   them (the user's call), each folding on a click; each publication a 36px
   row with its own icon, hanging from a line under its heading's icon on a
@@ -136,12 +145,30 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   rows ran 84px over); touch gets 44px. Icons: the system's set plus Tabler
   glyphs wrapped with the system's `makeIcon` in `src/lib/icons.tsx`, the one
   file allowed to import Tabler.
-- **Collapsed** (the user's call): a 64px rail showing only the Ask Analyst
+- **Collapsed** (the user's calls): a 64px rail showing only the Ask Analyst
   mark (`LogoMark`) at its head — the expand arrows replace it on hover or
-  focus — and the groups' icons, named by tooltips, the group holding the
-  page tinted; a click on one opens the sidebar at that group. Kept per
-  device (localStorage) and DRAWN from `<html data-sidebar-collapsed>`, set
-  before first paint by `SIDEBAR_FLAG_SCRIPT` (`src/data/sidebar.ts`,
+  focus — then the search as a 40px square drawn as the field is (the
+  user's reference keeps search in the rail; a click opens the sidebar with
+  the field in focus), then the groups' icons, the group holding the page
+  tinted. **A group's icon opens its flyout** (`RailFlyout`, the user's
+  reference, 2026-09-14, in place of tooltips that only named the group): a
+  card beside the rail — a Mantine Menu in a portal, radius and shadow lg —
+  with the group's name in small capitals level with the icon and its
+  publications hanging from a line under the name on rounded branches, as
+  in the open sidebar, the page in view in the brand tint. The line is drawn
+  INSIDE the card: the reference runs it down the rail from the icon, but
+  the next group's icon sits 16px below and the line would cross it. Opens
+  on hover after duration-fast (running the pointer down the rail flashes
+  nothing) and on click; closes duration-base after the pointer leaves (time
+  to cross to the card); opening one closes any other at once (one `flyout`
+  state in the sidebar). Hover leaves focus alone; Enter or Space opens it
+  with focus on the page in view (or the first), arrows and Tab move within,
+  Escape closes it and returns focus to the icon; Escape also dismisses a
+  hover-opened card wherever focus is (WCAG 1.4.13). Axe clean with the
+  sidebar open and with a card open in the rail. CSS `zoom` on the page
+  misplaces Floating UI's cards: judge them unzoomed. Kept per device
+  (localStorage) and DRAWN from `<html data-sidebar-collapsed>`, set before
+  first paint by `SIDEBAR_FLAG_SCRIPT` (`src/data/sidebar.ts`,
   `useSidebarCollapsed`), so it never flashes open.
 - **Below 1280px, one menu**: the docked sidebar and the top bar's editions
   are hidden; a burger beside the logo in the top bar opens a "Navigation"

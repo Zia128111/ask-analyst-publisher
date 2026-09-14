@@ -23,7 +23,11 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   Remittances / Central Govt Debt / OMC). Below
   1280px one "Navigation" drawer with editions + search + sections. The DS AppHeader is no longer
   used (CLAUDE.md finding 10); the top bar's raised layer also un-hid the Account drawer's title
-  and close button (finding 9).
+  and close button (finding 9). Third pass, after the user's rail reference: the rail's group
+  icons open FLYOUTS (`RailFlyout`: a card with the group's name and its pages on the tree, on
+  hover, click or Enter) in place of tooltips; the rail keeps a search button that opens the
+  sidebar with the field in focus; the search field itself is now a quiet 36px field (light rule,
+  14px, magnifier over the section icons) — the DS input's dark 3:1 border read heavy.
 - **Repo and deploy** (2026-09-11): public GitHub repo `Zia128111/ask-analyst-publisher`;
   Vercel project `ask-analyst-publisher` ("Zia's projects"), live at
   https://ask-analyst-publisher.vercel.app. Git deployments are OFF (Vercel cannot install the
