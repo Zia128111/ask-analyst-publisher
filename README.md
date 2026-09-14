@@ -95,7 +95,7 @@ colours are the other sheets'. The downloads:
 
 The day's news and the markets of the session before, read LIVE from the
 Ask Analyst feed and refreshed every five minutes (a saved copy stands in if
-the feed cannot be reached). Across the full width, in line with the tabs:
+the feed cannot be reached). Across the full grid, beside the publication sidebar:
 the benchmark's header — the date, the logo, "Morning Briefing" between two
 blue rules — the stories on the left, each with "Click here for more", and
 on the right five tables (Net LIPI/FIPI Position, FIPI Sector-wise, Major

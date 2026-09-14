@@ -1,38 +1,169 @@
 /*
- * `container.grid` is the width of the GRID, not of the box around it, so the
- * inline padding is added on top — the same arithmetic as the header's
- * width="grid", which is what puts the logo and the first chip on one edge.
+ * THE SIGNED-IN SHELL, after the user's reference (2026-09-14): the sidebar
+ * the full height of the screen at the inline start; beside it a column of
+ * the top bar, the page and the footer, at least the viewport tall so a short
+ * page keeps its footer at the foot of the screen.
+ *
+ * --topbar-height is shared with the sidebar's head (a control-lg row with
+ * space-2 above and below: 64px), so their rules meet in one line.
+ *
+ * In the DOM the skip link comes first, then the sidebar, then the top bar
+ * and the page: a keyboard meets them in the order they are seen.
  */
-/* A column at least the viewport tall, so on a short page (a publication not
-   built yet) the footer sits at the foot of the screen, not halfway up it.
-   The header stays sticky: its scroll container is still the viewport. */
 .shell {
+  --topbar-height: calc(var(--ask-control-lg) + 2 * var(--ask-space-2));
+
+  position: relative;
+  display: flex;
   min-block-size: 100dvh;
+}
+
+/* Hidden above the page until focused, as the design system's header draws it. */
+.skipLink {
+  position: absolute;
+  inset-inline-start: var(--ask-space-2);
+  inset-block-start: calc(-1 * var(--ask-control-lg));
+  z-index: calc(var(--ask-z-raised) + 1);
+  padding: var(--ask-space-2) var(--ask-space-4);
+  border: var(--ask-border-thick) solid var(--ask-border-focus);
+  border-radius: var(--ask-radius-md);
+  background: var(--ask-bg-surface);
+  color: var(--ask-text-link);
+  font-size: var(--ask-font-xs);
+  font-weight: 600;
+  text-decoration: none;
+  transition: inset-block-start var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.skipLink:focus {
+  inset-block-start: var(--ask-space-2);
+}
+
+.column {
+  flex: 1;
+  min-inline-size: 0;
   display: flex;
   flex-direction: column;
 }
 
-.page {
-  flex: 1;
-  inline-size: 100%;
-  max-inline-size: calc(var(--ask-container-grid) + 2 * var(--ask-space-4));
-  margin-inline: auto;
-  padding-inline: var(--ask-space-4);
-  padding-block: var(--ask-space-4) var(--ask-space-12);
+/*
+ * THE TOP BAR, sticky on the system's raised layer: above the page's own
+ * sticky table cells, and under Mantine's overlays, so a drawer opens over
+ * it with its title and close button in view (the design system header's
+ * sticky layer covered them: finding 9).
+ */
+.topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--ask-z-raised);
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-4);
+  block-size: var(--topbar-height);
+  padding-inline: var(--ask-space-6);
+  background: var(--ask-bg-surface);
+  border-block-end: var(--ask-border-thin) solid var(--ask-border-subtle);
+}
+
+/* The burger and the logo: only where the sidebar, which carries the logo,
+   is not docked. */
+.menuBrand {
+  display: none;
+  align-items: center;
+  gap: var(--ask-space-2);
+  min-inline-size: 0;
+}
+
+.brand {
+  display: inline-flex;
+  min-inline-size: 0;
+  border-radius: var(--ask-radius-sm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.topbarEnd {
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-2);
+  margin-inline-start: auto;
 }
 
 .main {
-  padding-block-start: var(--ask-space-3);
+  flex: 1;
+  padding-inline: var(--ask-space-6);
+  padding-block: var(--ask-space-5) var(--ask-space-12);
 }
 
 .footer {
+  padding: var(--ask-space-6);
   border-block-start: var(--ask-border-thin) solid var(--ask-border-subtle);
   background: var(--ask-bg-subtle);
 }
 
-.footerInner {
-  max-inline-size: calc(var(--ask-container-grid) + 2 * var(--ask-space-4));
-  margin-inline: auto;
-  padding-inline: var(--ask-space-4);
-  padding-block: var(--ask-space-6);
+@media (max-width: 1279px) {
+  .menuBrand {
+    display: flex;
+  }
+
+  .topbarEditions {
+    display: none;
+  }
+
+  .topbar,
+  .main,
+  .footer {
+    padding-inline: var(--ask-space-4);
+  }
+}
+
+/* The editions, as the design system's header draws its nav items: its
+   nav-item type, the current one on the brand tint in link blue. */
+.editionList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ask-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.edition {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--ask-control-md);
+  padding-inline: var(--ask-space-3);
+  border-radius: var(--ask-radius-sm);
+  font-size: var(--ask-font-2xs);
+  font-weight: 600;
+  color: var(--ask-text-secondary);
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.edition:hover {
+  background: var(--ask-bg-hover);
+  color: var(--ask-text-link);
+}
+
+.edition[aria-current='page'],
+.edition[aria-current='page']:hover {
+  background: var(--ask-bg-brand-subtle);
+  color: var(--ask-text-link);
+}
+
+/* In the drawer, the editions stand above the publications on a rule. */
+.drawerEditions {
+  margin-block-end: var(--ask-space-4);
+  padding-block-end: var(--ask-space-4);
+  border-block-end: var(--ask-border-thin) solid var(--ask-border-subtle);
+}
+
+@media (pointer: coarse) {
+  .edition {
+    min-block-size: var(--ask-touch-target);
+  }
 }

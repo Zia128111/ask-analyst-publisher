@@ -12,7 +12,8 @@ import '../../../src/branding/fonts';
  * ============================================================================
  * Renders once per edition and persists across its publications, so moving
  * from MTS to BOP swaps the sheet and leaves the header and the publication
- * row where they are. An unknown edition is a 404 here, before any page runs.
+ * sidebar, open groups and all, where they are. An unknown edition is a 404
+ * here, before any page runs.
  * ========================================================================= */
 
 export default async function Layout({

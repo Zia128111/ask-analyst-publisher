@@ -1,10 +1,10 @@
-import type { Edition, Masthead, Publication, Publisher } from './types';
+import type { Edition, Masthead, NavGroup, NavSection, Publication, Publisher } from './types';
 
 /* ============================================================================
  * PUBLICATIONS
  * ============================================================================
  * The catalogue behind the header's edition links and the publication
- * navigation. Static today; when it comes from the server the accessors below
+ * sidebar. Static today; when it comes from the server the accessors below
  * become async and nothing that calls them changes shape.
  * ========================================================================= */
 
@@ -26,33 +26,54 @@ export const MASTHEADS: Record<Masthead, { label: string; attribution: string }>
   askanalyst: { label: 'Ask Analyst', attribution: 'Ask Analyst' },
 };
 
-/** In the order the live site lists them. Labels are the product's own. */
+/**
+ * Every publication, in the sidebar's order. Labels are the product's own,
+ * the names the tabs first carried: the user tried shorter ones for the
+ * sidebar ("FIPI LIPI", "Remittances", "Central Govt Debt", "OMC") and kept
+ * these (2026-09-14). Titles are each sheet's own.
+ */
 export const PUBLICATIONS: Publication[] = [
   { slug: 'mts', label: 'MTS', title: 'Position Under Margin Trading System (MTS)' },
-  { slug: 'latest-result', label: 'Latest Result', title: 'Latest Results' },
-  /* The sheet's own title, as the live page prints it on the title band. */
-  { slug: 'bop', label: 'BOP', title: 'External Account Highlights' },
-  { slug: 'oil-marketing', label: 'Oil Marketing', title: 'OMCs Cumulative Sales' },
   /* The published PDF's title; "Portfolio Investment" heads the tables. */
   { slug: 'portfolio-investment', label: 'Portfolio Investment', title: 'FIPI / LIPI Daily Movement' },
+  { slug: 'settlement', label: 'Settlement', title: 'Settlement of top 10 traded stocks' },
   { slug: 'morning-briefing', label: 'Morning Briefing', title: 'Morning Briefing' },
-  /* The sheets' own titles, as the live pages print them. */
+  { slug: 'latest-result', label: 'Latest Result', title: 'Latest Results' },
+  /* The sheets' own titles, as the live pages print them on the title band. */
+  { slug: 'bop', label: 'BOP', title: 'External Account Highlights' },
   { slug: 'trade-pbs', label: 'Trade-PBS', title: 'Balance of Trade' },
   { slug: 'trade-sbp', label: 'Trade-SBP', title: 'Export of Services break-up (USD mn)' },
-  { slug: 'settlement', label: 'Settlement', title: 'Settlement of top 10 traded stocks' },
   { slug: 'remittance', label: 'Remittance', title: 'Workers’ Remittances (USD Mn)' },
   {
     slug: 'central-government-debt',
     label: 'Central Government Debt',
     title: 'Central Government Debt',
   },
+  { slug: 'currency', label: 'Currency', title: 'Weighted Average Exchange Rates' },
+  { slug: 'oil-marketing', label: 'Oil Marketing', title: 'OMCs Cumulative Sales' },
   { slug: 'cement', label: 'Cement', title: 'Cement Price History (PKR/bag)' },
   { slug: 'fertilizer', label: 'Fertilizer', title: 'Fertilizer Offtake and Inventory' },
-  { slug: 'currency', label: 'Currency', title: 'Weighted Average Exchange Rates' },
   { slug: 'auto', label: 'Auto', title: 'Auto Sales Volumes' },
 ];
 
-const ALL = PUBLICATIONS.map((p) => p.slug);
+/**
+ * The sidebar's groups, each with its publications, both in the user's order
+ * (2026-09-14). Every publication sits in exactly one group, and an edition
+ * lists its publications in this order, so its first is MTS.
+ */
+export const NAV_GROUPS: NavGroup[] = [
+  { id: 'market', label: 'Market', publications: ['mts', 'portfolio-investment', 'settlement'] },
+  { id: 'research', label: 'Research', publications: ['morning-briefing'] },
+  { id: 'companies', label: 'Companies', publications: ['latest-result'] },
+  {
+    id: 'economy',
+    label: 'Economy',
+    publications: ['bop', 'trade-pbs', 'trade-sbp', 'remittance', 'central-government-debt', 'currency'],
+  },
+  { id: 'sector', label: 'Sector', publications: ['oil-marketing', 'cement', 'fertilizer', 'auto'] },
+];
+
+const ALL = NAV_GROUPS.flatMap((group) => group.publications);
 
 /*
  * KSA carries only the Morning Briefing today, matching the live site, where
@@ -70,11 +91,20 @@ export const findEdition = (slug: string) => EDITIONS.find((e) => e.slug === slu
 export const findPublication = (slug: string) =>
   PUBLICATIONS.find((p) => p.slug === slug) ?? null;
 
-/** The publications an edition carries, as navigation entries. */
-export const publicationsFor = (edition: Edition) =>
-  edition.publications
-    .map(findPublication)
-    .filter((p): p is Publication => p !== null);
+/**
+ * The sidebar for an edition: each group with the publications that edition
+ * carries, in order. A group with none is left out, so KSA shows Research
+ * alone.
+ */
+export const navGroupsFor = (edition: Edition): NavSection[] =>
+  NAV_GROUPS.map((group) => ({
+    id: group.id,
+    label: group.label,
+    publications: group.publications
+      .filter((slug) => edition.publications.includes(slug))
+      .map(findPublication)
+      .filter((p): p is Publication => p !== null),
+  })).filter((group) => group.publications.length > 0);
 
 /** Where an edition's link lands: its first publication. */
 export const editionHome = (edition: Edition) => `/${edition.slug}/${edition.publications[0]}`;

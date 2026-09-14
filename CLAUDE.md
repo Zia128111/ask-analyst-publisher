@@ -22,7 +22,7 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
 - `app/(app)/[edition]/[publication]/` is every inner page: one route for all
   fifteen publications in every edition (`/askanalyst/mts`,
   `/alphacapital/bop`). The `[edition]` layout renders `AppShell` once, so the
-  header and tabs persist while the sheet swaps. `generateStaticParams` plus
+  header and the publication sidebar persist while the sheet swaps. `generateStaticParams` plus
   `dynamicParams = false` means only catalogue pairs exist; `/ksa/mts` is a
   404 because KSA does not carry MTS. `/askanalyst` redirects to its first
   publication. Sign-in lands on `/askanalyst/mts`.
@@ -86,23 +86,69 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   The live site's other feeds are listed in memory
   (`reference-askanalyst-api`).
 - **Adding a publication** = a fixture in `src/data/`, a view in `src/views/`,
-  its slug in `BUILT_PUBLICATIONS` (and `PENDING_IN_EDITION` for an edition
+  its entry in `PUBLICATIONS` and its slug in a group of `NAV_GROUPS` (the
+  sidebar; an edition's routes come from the groups, so a slug in no group has
+  no page), its slug in `BUILT_PUBLICATIONS` (and `PENDING_IN_EDITION` for an edition
   whose report of that name is a different one — `isBuilt(edition, slug)`:
   KSA's Morning Briefing), and a branch in the route's `page.tsx`;
   an entry in `src/branding/placement.ts` if its sheet offers different
   Report style settings from MTS. Views share `useMasthead` (which logo,
   who publishes) and `sheetDownloads` (the three formats). Until then its
-  tab opens `PendingPublicationView`, never a 404.
+  sidebar link opens `PendingPublicationView`, never a 404.
 - **Three navigations, three jobs.** Header links = editions (URL segment);
-  underline tabs = publications (URL segment, links in a `<nav>`, NOT the
-  Tabs component, because each is its own page); the toggle above the sheet
-  = masthead (local state, swaps only the logo). Switching edition keeps the
+  the sidebar = publications (URL segment, links in a `<nav>`, NOT the Tabs
+  component, because each is its own page); the toggle above the sheet =
+  masthead (local state, swaps only the logo). Switching edition keeps the
   reader on the same publication when the other edition carries it.
-- **The tabs are one row** and fit from a 1280px screen up (12px semibold,
-  the design system's nav-item type; padding closes one step below 1440px).
-  Narrower, they scroll with a visible thin scrollbar on desktop and a swipe
-  on phones, and the current tab scrolls into view. A sixteenth tab will not
-  fit at 1280 — re-measure if one is added.
+- **The shell** (`AppShell`, after the user's reference, 2026-09-14): the
+  publication sidebar the full height of the screen at the inline start, the
+  logo at its head; beside it a column of the app's own top bar (editions,
+  account), the page and the footer. The top bar and the sidebar's head share
+  `--topbar-height` (64px: control-lg + space-2 above and below) and close on
+  the same rule, so they read as one frame. DOM order: skip link, sidebar,
+  top bar, main. The top bar is NOT the design system's AppHeader, which has
+  no sidebar layout (finding 10): it keeps the skip link, the `<header>`
+  landmark and the editions as nav items with aria-current, and sits sticky
+  on `--ask-z-raised` — above the page's sticky cells, under Mantine's
+  overlays, so drawers open over it (finding 9).
+- **The publication sidebar** (`PublicationSidebar`), the user's two designs
+  (2026-09-14). Groups in `NAV_GROUPS`, in the user's order: Market (MTS,
+  Portfolio Investment, Settlement), Research (Morning Briefing), Companies
+  (Latest Result), Economy (BOP, Trade-PBS, Trade-SBP, Remittance, Central
+  Government Debt, Currency), Sector (Oil Marketing, Cement, Fertilizer,
+  Auto). The labels are the product's own, the tabs' first names: the user
+  tried shorter ones from their designs (FIPI LIPI, Remittances, Central Govt
+  Debt, OMC) and went back to these. 290px (three grid columns and a gutter, so
+  Central Government Debt fits beside its branch) on a light NEUTRAL grey —
+  the user's call, as the system's subtle surface (#f8fafc) read light blue;
+  the system has no neutral grey, so it is `color-mix` of 3% text colour into
+  the page (#f7f7f7), hover 6%. The head: the lockup, linking to the edition's first publication,
+  and a collapse button. Then a quick search that narrows the list by a
+  publication's or a group's name (a hidden status says how many are left;
+  Escape clears it). Then sections under small capital headings with the
+  group's icon (the user asked for them), spaced apart with no rules between
+  them (the user's call), each folding on a click; each publication a 36px
+  row with its own icon, hanging from a line under its heading's icon on a
+  rounded branch, as in the user's reference (`.items::before` draws the
+  line, each `li::before` its branch); the page in view on
+  the brand tint in link blue (4.5:1), hover the neutral muted tint. The rows
+  are sized so all fifteen fit a 960px screen with every section open (40px
+  rows ran 84px over); touch gets 44px. Icons: the system's set plus Tabler
+  glyphs wrapped with the system's `makeIcon` in `src/lib/icons.tsx`, the one
+  file allowed to import Tabler.
+- **Collapsed** (the user's call): a 64px rail showing only the Ask Analyst
+  mark (`LogoMark`) at its head — the expand arrows replace it on hover or
+  focus — and the groups' icons, named by tooltips, the group holding the
+  page tinted; a click on one opens the sidebar at that group. Kept per
+  device (localStorage) and DRAWN from `<html data-sidebar-collapsed>`, set
+  before first paint by `SIDEBAR_FLAG_SCRIPT` (`src/data/sidebar.ts`,
+  `useSidebarCollapsed`), so it never flashes open.
+- **Below 1280px, one menu**: the docked sidebar and the top bar's editions
+  are hidden; a burger beside the logo in the top bar opens a "Navigation"
+  drawer from the inline start with the editions and the sidebar's search
+  and sections, and following a link closes it. Measured: the top bar stays
+  one 64px row at 375px; axe clean at 1920 and 375, light and dark; RTL
+  mirrors.
 - **`ReportSheet` is the letterhead for every publication**: publisher band,
   date, title band (the page's one `<h1>`), masthead logo, body, italic
   source line. No card frame, as in the benchmark. Seven grid columns wide
@@ -110,8 +156,8 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   widen it to eight and nine (`--report-columns`). A report about one
   company passes its own `letterhead` instead of the bands
   (`CompanyLetterhead`): same sheet, measure, typeface and source line.
-- **The MTS page fits one screen** (the sheet ends at 883px in a 1920×960
-  pane): the table uses the design system's `data-density="compact"`, and
+- **The MTS page fits one screen** (the sheet ends at 838px in a 1920×960
+  pane beside the sidebar and under the top bar; 883px under the old row of tabs): the table uses the design system's `data-density="compact"`, and
   where `text-box` is supported, cap-trimmed cells with 8px padding (27px
   rows). Adding rows or letterhead height means re-measuring.
 - **The MTS table copies the benchmark exactly** at the user's request: tinted
@@ -473,8 +519,9 @@ The day's briefing — the stories, and the markets of the session before —
 - **KSA's Morning Briefing is a different report** (feed `api/ksa/msg/mb`:
   topics with a category and a sentiment) and stays pending
   (`isBuilt`); its page offers no link back to itself.
-- **Layout**: the FULL grid, 12 columns, in line with the tabs' start and
-  end (the user's call) — the stories 8 columns, the tables 4 (420px). Its
+- **Layout**: the FULL grid, 12 columns (the user's call, made when a row of
+  tabs spanned the page; beside the docked sidebar it fits from about 1,660px
+  of screen, and narrower it stacks as below) — the stories 8 columns, the tables 4 (420px). Its
   OWN header (`BriefingLetterhead`), exactly the benchmark's at the user's
   request: the date, "11 September, 2026" as the benchmark writes it (the
   one sheet not on `formatDate`), and the logo in a 64px box on one line;
@@ -1233,6 +1280,19 @@ system, not something to patch here.
    so the hidden table grows to its text and scrolls the page sideways —
    70px on BOP. `AskChart` puts `sr-only` on its data table this way. Wrap
    the table in a `div.sr-only` instead (`BopChart`). Not yet filed.
+9. **A Drawer opens UNDER the sticky AppHeader**: the theme raises Modal to
+   `--ask-z-popover` but leaves Drawer at Mantine's 200, below the header's
+   `--ask-z-sticky` (1100), so the header covers a drawer's title and close
+   button — the Account drawer's were covered (found 2026-09-14). The
+   Publisher's own top bar sits on `--ask-z-raised` instead, under Mantine's
+   overlays, so every drawer and its dropdowns open over it. Not yet filed.
+10. **AppHeader has no sidebar layout**: its `brand` falls back to the logo,
+    and below 1280px it always adds its own burger and drawer for `items`, so
+    it cannot sit beside a full-height sidebar that carries the logo and a
+    menu of its own (hiding its burger was tried, and two burgers had wrapped
+    the phone header onto two rows). The Publisher renders its own top bar on
+    the system's tokens (`AppShell`). A layout mode or props for it would do.
+    Not yet filed.
 
 ## Layout
 

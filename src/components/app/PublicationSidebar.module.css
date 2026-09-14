@@ -1,0 +1,450 @@
+/*
+ * PUBLICATION SIDEBAR — after the user's reference (2026-09-14), in the
+ * system's tokens: a light neutral grey surface under a subtle rule; the head as tall
+ * as the top bar and closing on the same rule; a quick search; sections under
+ * small capital headings, each with its icon, spaced apart with no rules
+ * between them (the user's call); 36px rows 2px apart with 8px corners, a
+ * 16px icon 12px from a 14px label, hanging from a line under their heading's
+ * icon on rounded branches (the user's reference); the brand tint and
+ * link blue on the page in view (4.5:1, the header's own "you are here"); a
+ * slightly deeper grey on hover, so hover never reads as selected.
+ *
+ * The rows are sized so all fifteen publications, every section open, fit a
+ * 960px-tall screen under the head and the search (measured: 40px rows ran
+ * 84px over); touch screens still get 44px rows.
+ */
+
+/*
+ * --sidebar-surface is a light NEUTRAL grey, the user's call: the system's
+ * subtle surface (#f8fafc) read light blue beside the white page. The system
+ * has no neutral grey, so it is mixed from its own tokens — 3% of the text
+ * colour into the page (#f7f7f7 in light; in dark, a shade off the page) —
+ * and hover is the same mix at 6%.
+ */
+.sidebar {
+  --sidebar-row: calc(var(--ask-control-sm) + var(--ask-space-1));
+  --sidebar-surface: color-mix(in srgb, var(--ask-text-primary) 3%, var(--ask-bg-page));
+  --sidebar-hover: color-mix(in srgb, var(--ask-text-primary) 6%, var(--ask-bg-page));
+
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}
+
+/* Docked: the full height of the screen beside the page, staying put as the
+   page scrolls. 290px — three grid columns and a gutter, so the longest name,
+   Central Government Debt, still fits beside its branch. */
+.sidebar[data-variant='docked'] {
+  position: sticky;
+  inset-block-start: 0;
+  flex: none;
+  inline-size: calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter));
+  block-size: 100dvh;
+  background: var(--sidebar-surface);
+  border-inline-end: var(--ask-border-thin) solid var(--ask-border-subtle);
+  transition: inline-size var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+/* Below 1280px the sidebar lives in the navigation drawer instead. */
+@media (max-width: 1279px) {
+  .sidebar[data-variant='docked'] {
+    display: none;
+  }
+}
+
+/* The head: the logo and the collapse button, as tall as the top bar
+   (--topbar-height, from AppShell) and closing on the same rule. */
+.head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ask-space-2);
+  block-size: var(--topbar-height, calc(var(--ask-control-lg) + 2 * var(--ask-space-2)));
+  padding-inline: var(--ask-space-4) var(--ask-space-3);
+  border-block-end: var(--ask-border-thin) solid var(--ask-border-subtle);
+}
+
+.brand {
+  display: inline-flex;
+  min-inline-size: 0;
+  border-radius: var(--ask-radius-sm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.collapse {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ask-control-sm);
+  block-size: var(--ask-control-sm);
+  border-radius: var(--ask-radius-md);
+  color: var(--ask-text-tertiary);
+  transition:
+    background-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.collapse:hover {
+  background: var(--sidebar-hover);
+  color: var(--ask-text-primary);
+}
+
+/* The Ask Analyst mark: the rail's head only. */
+.mark {
+  display: none;
+}
+
+/* Double chevrons toward the edge to collapse, away from it to open again;
+   mirrored in the Arabic build. */
+.collapseIcon {
+  transition: rotate var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+:global([dir='rtl']) .collapseIcon {
+  scale: -1 1;
+}
+
+.search {
+  flex: none;
+  padding: var(--ask-space-3) var(--ask-space-3) var(--ask-space-1);
+}
+
+.searchInput {
+  background: var(--ask-bg-surface);
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ask-control-xs);
+  block-size: var(--ask-control-xs);
+  border-radius: var(--ask-radius-sm);
+  color: var(--ask-text-tertiary);
+}
+
+.clear:hover {
+  background: var(--sidebar-hover);
+  color: var(--ask-text-primary);
+}
+
+/* The publications scroll on their own under the head and the search. */
+.nav {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: var(--ask-space-1) var(--ask-space-3) var(--ask-space-4);
+}
+
+/*
+ * A section. The tree its publications hang from is measured from here: the
+ * line stands under the centre of the heading's icon (its padding and half
+ * the icon), each branch runs a space-5 toward its row, and bends with the
+ * 8px corner the rows use.
+ */
+.section {
+  --tree-spine: calc(var(--ask-space-3) + var(--ask-space-2));
+  --tree-branch: var(--ask-space-5);
+  --tree-curve: var(--ask-radius-md);
+  --tree-line: var(--ask-border-thin) solid var(--ask-border-default);
+
+  padding-block: var(--ask-space-1);
+}
+
+/* Sections part by space alone: no rule between them (the user's call). */
+.section + .section {
+  margin-block-start: var(--ask-space-2);
+}
+
+/* A section's heading: its icon and small capitals, and the button that
+   folds it. */
+.sectionToggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-3);
+  inline-size: 100%;
+  min-block-size: var(--ask-control-sm);
+  padding-inline: var(--ask-space-3);
+  border-radius: var(--ask-radius-md);
+  color: var(--ask-text-tertiary);
+  transition:
+    background-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.sectionToggle:hover {
+  color: var(--ask-text-primary);
+}
+
+.sectionIcon {
+  flex: none;
+}
+
+.sectionLabel {
+  flex: 1;
+  min-inline-size: 0;
+  font-size: var(--ask-font-2xs);
+  font-weight: 600;
+  line-height: var(--ask-leading-snug);
+  letter-spacing: 0.04em;
+  text-align: start;
+  text-transform: uppercase;
+}
+
+.chevron {
+  flex: none;
+  rotate: 180deg;
+  transition: rotate var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.section[data-closed] .chevron {
+  rotate: 0deg;
+}
+
+/*
+ * A section's publications hang from a line under its heading's icon, each
+ * on a rounded branch that ends just short of its row — the user's reference
+ * (2026-09-14), after a plain indent. The rows start past the branch.
+ */
+.items {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ask-space-1) / 2);
+  margin: 0;
+  padding-block: var(--ask-space-1) 0;
+  padding-inline: calc(var(--tree-spine) + var(--tree-branch) + var(--ask-space-1)) 0;
+  list-style: none;
+}
+
+/* The line: from just under the heading's icon to where the last branch
+   curves away from it. */
+.items::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: var(--tree-spine);
+  inset-block-start: calc(-1 * var(--ask-space-1));
+  inset-block-end: calc(var(--sidebar-row) / 2 + var(--tree-curve));
+  border-inline-start: var(--tree-line);
+}
+
+.items > li {
+  position: relative;
+}
+
+/* A branch: the curve off the line into a stub pointing at the row's middle.
+   Where the line runs on past it, the two overlap exactly. */
+.items > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1 * (var(--tree-branch) + var(--ask-space-1)));
+  inset-block-start: calc(50% - var(--tree-curve));
+  inline-size: var(--tree-branch);
+  block-size: var(--tree-curve);
+  border-inline-start: var(--tree-line);
+  border-block-end: var(--tree-line);
+  border-end-start-radius: var(--tree-curve);
+}
+
+.section[data-closed] .items {
+  display: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ask-space-3);
+  min-block-size: var(--sidebar-row);
+  padding-inline: var(--ask-space-3);
+  border-radius: var(--ask-radius-md);
+  font-size: var(--ask-font-xs);
+  font-weight: 500;
+  line-height: var(--ask-leading-snug);
+  color: var(--ask-text-secondary);
+  text-decoration: none;
+  transition:
+    background-color var(--ask-duration-fast) var(--ask-ease-standard),
+    color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.itemIcon {
+  flex: none;
+  color: var(--ask-text-tertiary);
+  transition: color var(--ask-duration-fast) var(--ask-ease-standard);
+}
+
+.itemLabel {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.item:hover {
+  background: var(--sidebar-hover);
+  color: var(--ask-text-primary);
+}
+
+.item:hover .itemIcon {
+  color: var(--ask-text-secondary);
+}
+
+/* The page in view: the brand tint and the link blue, as the header marks
+   the current edition. */
+.item[aria-current='page'],
+.item[aria-current='page']:hover {
+  background: var(--ask-bg-brand-subtle);
+  color: var(--ask-text-link);
+  font-weight: 600;
+}
+
+.item[aria-current='page'] .itemIcon {
+  color: var(--ask-text-link);
+}
+
+.empty {
+  margin: var(--ask-space-3) var(--ask-space-3) 0;
+  font-size: var(--ask-font-xs);
+  line-height: var(--ask-leading-normal);
+  color: var(--ask-text-tertiary);
+}
+
+/* In the drawer: no panel of its own; the drawer's body scrolls. */
+.sidebar[data-variant='drawer'] .search {
+  padding: 0 0 var(--ask-space-1);
+}
+
+.sidebar[data-variant='drawer'] .nav {
+  overflow: visible;
+  padding-inline: 0;
+}
+
+/*
+ * THE RAIL: the docked sidebar collapsed to 64px (a 40px square and the
+ * padding). Its head shows only the Ask Analyst mark, which gives way to the
+ * expand arrows on hover or focus; below it, the groups' icons alone, the
+ * group holding the page in the brand tint. Names stay in
+ * the buttons, hidden, and tooltips show them.
+ */
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] {
+  inline-size: calc(var(--ask-control-md) + 2 * var(--ask-space-3));
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .head {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .brand,
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .search,
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .chevron,
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .items {
+  display: none;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .collapse {
+  inline-size: var(--ask-control-md);
+  block-size: var(--ask-control-md);
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .mark {
+  display: block;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .collapseIcon {
+  display: none;
+  rotate: 180deg;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .collapse:is(:hover, :focus-visible) .mark {
+  display: none;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .collapse:is(:hover, :focus-visible) .collapseIcon {
+  display: block;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionToggle {
+  justify-content: center;
+  min-block-size: var(--ask-control-md);
+  padding-inline: 0;
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionToggle:hover {
+  background: var(--sidebar-hover);
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .section[data-current] .sectionToggle {
+  background: var(--ask-bg-brand-subtle);
+  color: var(--ask-text-link);
+}
+
+:global(html[data-sidebar-collapsed]) .sidebar[data-variant='docked'] .sectionLabel {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Names in the rail and on the collapse button, in the scheme's own tooltip
+   colours (see finding 5). */
+.tooltip {
+  --tooltip-bg: var(--ask-chart-tooltip-bg);
+  --tooltip-color: var(--ask-text-primary);
+
+  padding: var(--ask-space-2) var(--ask-space-3);
+  font-size: var(--ask-font-2xs);
+  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.tooltipArrow {
+  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
+}
+
+@media (pointer: coarse) {
+  .collapse,
+  .clear {
+    inline-size: var(--ask-touch-target);
+    block-size: var(--ask-touch-target);
+  }
+
+  /* The rows' height is a variable, so the tree's line still ends on the
+     last branch. */
+  .sidebar {
+    --sidebar-row: var(--ask-touch-target);
+  }
+
+  .sectionToggle {
+    min-block-size: var(--ask-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar[data-variant='docked'],
+  .collapse,
+  .collapseIcon,
+  .sectionToggle,
+  .chevron,
+  .item,
+  .itemIcon {
+    transition: none;
+  }
+}
+
+/* Forced colours strip the tints: outline the page in view instead. */
+@media (forced-colors: active) {
+  .item[aria-current='page'] {
+    outline: var(--ask-border-thick) solid;
+    outline-offset: calc(-1 * var(--ask-border-thick));
+  }
+}

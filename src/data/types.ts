@@ -22,6 +22,23 @@ export interface Publication {
   title: string;
 }
 
+/** A group in the publication sidebar. The sidebar picks each group's icon. */
+export type NavGroupId = 'market' | 'research' | 'companies' | 'economy' | 'sector';
+
+export interface NavGroup {
+  id: NavGroupId;
+  label: string;
+  /** Publication slugs, in the sidebar's order. */
+  publications: string[];
+}
+
+/** A group as the sidebar draws it for one edition: its publications resolved. */
+export interface NavSection {
+  id: NavGroupId;
+  label: string;
+  publications: Publication[];
+}
+
 /** The legal entity that publishes every report, printed on the letterhead. */
 export interface Publisher {
   name: string;

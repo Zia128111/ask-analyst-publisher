@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 
 import { BRANDED_FLAG_SCRIPT } from '../src/data/branding';
+import { SIDEBAR_FLAG_SCRIPT } from '../src/data/sidebar';
 import { Providers } from './providers';
 
 /* ============================================================================
@@ -54,6 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
          * default letterhead first. See src/data/branding.ts.
          */}
         <script dangerouslySetInnerHTML={{ __html: BRANDED_FLAG_SCRIPT }} />
+        {/*
+         * And marks <html> when the publication sidebar is kept collapsed, so
+         * it is drawn collapsed from the first paint. See src/data/sidebar.ts.
+         */}
+        <script dangerouslySetInnerHTML={{ __html: SIDEBAR_FLAG_SCRIPT }} />
       </head>
       <body>
         <Providers>{children}</Providers>

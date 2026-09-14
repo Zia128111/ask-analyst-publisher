@@ -14,6 +14,16 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   **Morning Briefing**, **Trade-PBS**, **Trade-SBP**, **Settlement**, **Remittance**,
   **Central Government Debt**, **Cement**, **Fertilizer**, **Currency** and **Auto** — every
   publication tab; only KSA's briefing (a different report) shows a pending page.
+- **Publication sidebar** (2026-09-14, the user's designs and sequence): the row of tabs is gone.
+  Second pass after the user's reference ("enhance the view… logo above it"): a full-height
+  sidebar with the logo at its head beside the app's own top bar (one 64px frame line), a quick
+  search, sections under icon + small-caps headings, each publication with its own icon; collapsed
+  to a 64px rail with only the Ask Analyst mark and the groups' icons (the user's call). Groups
+  in `NAV_GROUPS` (labels: the product's own tab names, the user's call after trying FIPI LIPI /
+  Remittances / Central Govt Debt / OMC). Below
+  1280px one "Navigation" drawer with editions + search + sections. The DS AppHeader is no longer
+  used (CLAUDE.md finding 10); the top bar's raised layer also un-hid the Account drawer's title
+  and close button (finding 9).
 - **Repo and deploy** (2026-09-11): public GitHub repo `Zia128111/ask-analyst-publisher`;
   Vercel project `ask-analyst-publisher` ("Zia's projects"), live at
   https://ask-analyst-publisher.vercel.app. Git deployments are OFF (Vercel cannot install the
@@ -153,6 +163,16 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   Reset style full width, Replace/Remove and Apply/Discard equal halves; logo advice in grey type
   (amber icon kept); idle Apply on the DS disabled look in dark mode instead of Mantine's charcoal.
   Files: `ReportStyleSettings.tsx/.module.css`, `branding/placement.ts`, CLAUDE.md, README.md.
+
+## Files created or changed (2026-09-14, publication sidebar)
+- New: `src/components/app/PublicationSidebar.tsx/.module.css`,
+  `src/components/app/useSidebarCollapsed.ts`, `src/data/sidebar.ts`, `src/lib/icons.tsx`.
+- Changed: `src/components/app/AppShell.tsx/.module.css` (full-height sidebar beside the app's
+  own top bar and skip link, one small-screen menu; no DS AppHeader), `src/data/publications.ts` (sidebar order and labels, `NAV_GROUPS`,
+  `navGroupsFor`), `src/data/types.ts` (`NavGroup`, `NavSection`), `app/layout.tsx` (sidebar
+  head script), `app/(app)/[edition]/layout.tsx` (comment), `package.json` +
+  `package-lock.json` (`@tabler/icons-react` as a direct dependency), docs.
+- Deleted: `src/components/app/PublicationNav.tsx/.module.css`.
 
 ## Files created or changed (2026-09-11, Auto)
 - New: `src/data/auto.ts`.
