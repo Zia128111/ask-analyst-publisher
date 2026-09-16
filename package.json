@@ -15,7 +15,7 @@
     "verify:a11y": "npx --yes @axe-core/cli http://localhost:3000/sign-in http://localhost:3000/sign-up http://localhost:3000/forgot-password --exit --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa"
   },
   "dependencies": {
-    "@akseer/ask-analyst-design-system": "github:Knowbridge-UI/Design-system#v1.3.3",
+    "@akseer/ask-analyst-design-system": "github:Knowbridge-UI/Design-system#v2.0.2",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/open-sans": "^5.3.0",
     "@fontsource-variable/roboto": "^5.3.0",

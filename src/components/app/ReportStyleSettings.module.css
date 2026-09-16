@@ -70,29 +70,11 @@
   color: var(--ask-text-tertiary);
 }
 
-/*
- * The explainer's tooltip follows the colour scheme, as the design system's
- * chart tooltips do, and with their tokens: white with a grey edge in light
- * mode, slate with a darker edge in dark mode. Mantine's own is inverted —
- * near-black on a light page — which the user called wrong for light mode.
- * The bg and text go in through Mantine's own variables, which it sets
- * inline only when a `color` is passed. The arrow takes the same edge on its
- * two outer sides; Mantine already makes its inner sides transparent.
- */
+/* The explainer wraps inside three grid columns. Its surface, ink, edge and
+   shadow are the design system Tooltip material, which took the floating
+   surfaces colours in v2.0.2; before that this file bridged them by hand. */
 .tooltip {
-  --tooltip-bg: var(--ask-chart-tooltip-bg);
-  --tooltip-color: var(--ask-text-primary);
-
   max-inline-size: calc(var(--ask-grid-column) * 3 + var(--ask-grid-gutter) * 2);
-  padding: var(--ask-space-2) var(--ask-space-3);
-  font-size: var(--ask-font-2xs);
-  line-height: var(--ask-leading-normal);
-  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
-  box-shadow: var(--mantine-shadow-md);
-}
-
-.tooltipArrow {
-  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
 }
 
 /* The logo in use, if any, above its buttons. */

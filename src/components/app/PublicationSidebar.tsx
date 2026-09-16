@@ -187,7 +187,6 @@ export function PublicationSidebar({
   const tooltip = {
     position: dir === 'rtl' ? ('left' as const) : ('right' as const),
     withArrow: true,
-    classNames: { tooltip: classes.tooltip, arrow: classes.tooltipArrow },
   };
 
   return (

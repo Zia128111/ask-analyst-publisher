@@ -2,7 +2,7 @@
 
 ## Goal
 Build the Ask Analyst **Publisher** module in Next.js 16 (App Router) + Mantine 9 on the
-Ask Analyst Design System (`github:Knowbridge-UI/Design-system#v1.3.3`, local clone at
+Ask Analyst Design System (`github:Knowbridge-UI/Design-system#v2.0.2`, local clone at
 `D:\Claude for Design\Ask Analyst New UI`). Pages copy the user's benchmark screenshots
 exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is the full spec.
 
@@ -26,6 +26,12 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
   `ksa/morning-briefing` (`placementFor(publication, edition)`), fields under a "Header" group.
   An uploaded logo adds an "Akseer | <company>" switch. Downloads: PNG 2664px, PDF one A4
   landscape page, Excel one sheet with the links. Axe clean in light, dark and at 375px.
+- **Design system bumped to v2.0.2** (2026-09-16, from v1.3.3): Lato's metrics (1.3.4, 2.0.1),
+  Menu and Tooltip on the floating-surface material (2.0.2), `DirectionToggle` removed (2.0.0,
+  never used here). The two local tooltip bridges are deleted; the report sheet keeps its
+  `text-box` trim for the other Report style faces. Re-measured after the bump: MTS sheet 838px
+  with 26.5–27.1px rows, briefing market rows 31.1px, KSA topic rows 58–58.5px; type check,
+  lint, audits and build clean.
 - **Publication sidebar** (2026-09-14, the user's designs and sequence): the row of tabs is gone.
   Second pass after the user's reference ("enhance the view… logo above it"): a full-height
   sidebar with the logo at its head beside the app's own top bar (one 64px frame line), a quick
@@ -393,7 +399,8 @@ exactly; design-system rules sit underneath. Read `CLAUDE.md` first — it is th
 - Settings live in one browser only; no server or per-account storage yet. DECIDED
   (2026-09-11): the Report style is saved per COMPANY, and each company has one user, so the
   account's company is the key once sign-in is real (`src/data/branding.ts` only).
-- Publisher pins DS v1.3.3; v1.3.4 (Lato metrics) is out and is still the newest remote tag.
+- Publisher pins DS v2.0.2 (bumped 2026-09-16 from v1.3.3: Lato metrics, Menu and Tooltip on
+  the floating-surface material, `DirectionToggle` gone — see CLAUDE.md "Design system version").
 - `gh` is signed in as `Zia128111`, which cannot see Knowbridge-UI; `ziaali-dotcom` can
   (`gh auth switch -u ziaali-dotcom`). Git over HTTPS can read the repo either way.
 - Alpha Capital dark logo is derived, not supplied; meaning of the MTS "A" column unconfirmed.
@@ -472,5 +479,5 @@ npm run verify:a11y   # needs dev server on :3000; scans the auth pages only
    Table-only monthly sheets share `MonthlyView` (a `SHEETS` entry per slug + the route's
    `MONTHLY_SHEETS`) and `outlineRow`/`msgRows`/`msgRow`.
 3. Offer (don't do unasked): connect Latest Result to the live feed; white-label the footer;
-   the logo image in Excel; file the DS findings upstream; bump the DS to v1.3.4 and re-measure.
+   the logo image in Excel; file the DS findings still open upstream (3, 4, 6 to 10).
 4. Keep project memory and CLAUDE.md in step with any change to the rules above.

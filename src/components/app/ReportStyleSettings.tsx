@@ -184,7 +184,7 @@ function Field({
               radius="md"
               position="top-end"
               arrowPosition="center"
-              classNames={{ tooltip: classes.tooltip, arrow: classes.tooltipArrow }}
+              classNames={{ tooltip: classes.tooltip }}
             >
               <ActionIcon
                 variant="subtle"

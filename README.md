@@ -298,4 +298,4 @@ npm run verify
 `npm run verify:a11y` runs axe against a running dev server. Expect exactly the
 design system's recorded `text-on-brand` deviation and nothing else. See
 [CLAUDE.md](CLAUDE.md) for the design-system findings this module surfaced:
-two fixed upstream in v1.3.2 and v1.3.3, one worked around here.
+three fixed upstream in v1.3.2, v1.3.3 and v2.0.2; the rest are worked around here.

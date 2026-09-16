@@ -570,22 +570,6 @@
   font-weight: 600;
 }
 
-/* Names in the rail and on the collapse button, in the scheme's own tooltip
-   colours (see finding 5). */
-.tooltip {
-  --tooltip-bg: var(--ask-chart-tooltip-bg);
-  --tooltip-color: var(--ask-text-primary);
-
-  padding: var(--ask-space-2) var(--ask-space-3);
-  font-size: var(--ask-font-2xs);
-  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
-  box-shadow: var(--mantine-shadow-md);
-}
-
-.tooltipArrow {
-  border: var(--ask-border-thin) solid var(--ask-chart-tooltip-border);
-}
-
 @media (pointer: coarse) {
   .collapse,
   .clear {

@@ -253,8 +253,9 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   Download label use `text-box: trim-both cap alphabetic` with even padding;
   measured 8.5/8.5px in rows. Table padding changes only under
   `@supports`, so unsupported browsers keep the compact rows. The design
-  system fixed Lato itself in v1.3.4, but keep the trim: it centres whatever
-  face the Report style picks, and those faces have their own metrics.
+  system fixed Lato itself in v1.3.4 and tuned the pair again in v2.0.1, but
+  keep the trim: it centres whatever face the Report style picks, and those
+  faces have their own metrics.
 - **Account drawer** (`AccountMenu`) holds the colour-scheme toggle behind the
   avatar, the same drawer pattern as the auth pages' burger, and the Report
   style below it. `AppShell` passes it the publication in view, which sets
@@ -1113,8 +1114,8 @@ refresh keeps their choice):
   `placement.ts`: no how, no jargon — the user cut paragraphs down to
   that. Keep new ones under ~45 characters, one line of the tooltip. The
   tooltip follows the colour scheme — white with a grey edge in light
-  mode, slate in dark — on the design system's chart-tooltip tokens
-  (finding 5); Mantine's own is inverted, which the user called wrong.
+  mode, slate in dark — which the design system's own Tooltip took in
+  v2.0.2 (finding 5); this file only caps its width at three grid columns.
   The button is outside the `<label>` (a button in a label is invalid and
   would focus the field); it keeps its 28px target but lends 4px above and
   below to the label's line, so a heading with a button sits where one
@@ -1330,10 +1331,10 @@ meets a design-system rule, the rule wins:
 
 ## Design system findings
 
-The first two defects surfaced while building this module were fixed
-upstream and the pinned tag includes both, so no workaround remains for them.
-If either symptom reappears after a bump, it is a regression in the design
-system, not something to patch here.
+Three of the defects surfaced while building this module — 1, 2 and 5 — were
+fixed upstream, and the pinned tag includes them all, so no workaround remains
+for those. If one of those symptoms reappears after a bump, it is a regression
+in the design system, not something to patch here.
 
 1. **`ColorSchemeToggle` hydration mismatch** with a stored scheme (Mantine's
    provider reads localStorage during the first client render). Fixed in
@@ -1353,13 +1354,14 @@ system, not something to patch here.
    "Accounting parentheses are the default": `formatNumber(-88598)` gives
    "-88,598". Pass `signStyle: 'parens'` for "(88,598)" (`ResultTable`).
    Either the comment or the default is wrong. Not yet filed upstream.
-5. **Mantine's Tooltip keeps Mantine's inverted colours** (near-black in
+5. **Mantine's Tooltip kept Mantine's inverted colours** (near-black in
    light mode, light grey in dark) while the system's own chart tooltips
-   follow the scheme (`--ask-chart-tooltip-bg` / `-border`, white and
-   slate). The theme's `Tooltip.extend` sets only radius, arrow and delays.
-   Styled here with the chart tokens (`.tooltip` in
-   `ReportStyleSettings.module.css`); the theme could set the same
-   classNames. Not yet filed upstream.
+   followed the scheme. **Fixed upstream in v2.0.2**: the theme's Tooltip now
+   takes the surface, primary ink, the default edge round its arrow, the
+   medium shadow and 4px by 8px of padding. The bridges in
+   `PublicationSidebar.module.css` and `ReportStyleSettings.module.css` went
+   when this module took v2.0.2; the drawer's class now only caps the
+   explainer at three grid columns.
 6. **A disabled FILLED button falls through to Mantine's disabled colours**:
    the theme gives disabled DEFAULT buttons its own look (bg-muted,
    border-default, text-disabled) but not filled ones, which get
@@ -1440,7 +1442,7 @@ re-copy, or the two drift apart.
   it (`npm pack node_modules/@akseer/ask-analyst-design-system
   --ignore-scripts --pack-destination vendor` — its `prepack` would rebuild
   it); in the copy only, the dependency pointed at
-  `file:vendor/akseer-ask-analyst-design-system-1.3.3.tgz` and the lockfile
+  `file:vendor/akseer-ask-analyst-design-system-2.0.2.tgz` and the lockfile
   updated (`npm install --package-lock-only --ignore-scripts`); this
   folder's `.vercel/project.json` copied in; then `vercel deploy --prod
   --cwd <copy>`, which builds on Vercel's Linux machines. The tarball goes
@@ -1451,17 +1453,36 @@ re-copy, or the two drift apart.
 ## Design system version
 
 The design system lives at **`Knowbridge-UI/Design-system`** and the dependency
-is pinned to the **`v1.3.3`** tag:
+is pinned to the **`v2.0.2`** tag:
 
 ```bash
-npm i "github:Knowbridge-UI/Design-system#v1.3.3"
+npm i "github:Knowbridge-UI/Design-system#v2.0.2"
 ```
 
 Pinned to a tag, not a branch, so a build months from now resolves the same
-commit. Bump it deliberately after reading the changelog. v1.3.4 (Lato
-vertical metrics) is out and not yet taken; bumping moves baseline-aligned
-layouts by up to a pixel, so re-measure the MTS sheet when you do. The
-`design-system-docs` entry in `.claude/launch.json` runs the system's living
+commit. Bump it deliberately after reading the changelog.
+
+**Taken 2026-09-16, from v1.3.3**, at the user's ask. What came with it, and
+what it cost here:
+- **2.0.0 removed `DirectionToggle`** and the direction icons. Breaking, but
+  this module never used them, so nothing changed.
+- **1.3.4 and 2.0.1 balanced Lato's vertical metrics** (now ascent 89.5% /
+  descent 10.5%), so text centres within half a pixel in Chrome. Heights set
+  by a baseline move by under a pixel: re-measured here, the MTS sheet still
+  ends at 838px on a 1920x960 screen, its rows are 26.5–27.1px (27px before),
+  the Morning Briefing's market rows 31.1px and KSA's topic rows 58–58.5px.
+  The report sheet KEEPS its `text-box` trim (above): the system balances
+  Lato, not the other six faces the Report style offers.
+- **2.0.2 gave Menu and Tooltip the floating-surface material** — measured
+  after the bump: the Download menu is the surface with the default edge, an
+  8px radius, 8px of padding and 8px by 12px rows — so the two local tooltip
+  bridges went (finding 5).
+- **1.3.5, 1.3.6 and 2.0.2** also fixed the system's own `MarketTable`,
+  `PageHeading`, `Autocomplete`/`TagsInput` and a body-height rule under
+  sticky headers. None of those reaches this module: its market table and
+  header are its own.
+
+The `design-system-docs` entry in `.claude/launch.json` runs the system's living
 docs from the local clone at `D:\Claude for Design\Ask Analyst New UI`.
 
 **The repo is PRIVATE.** Two GitHub accounts are in play on this machine:
