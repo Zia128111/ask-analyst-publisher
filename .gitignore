@@ -28,3 +28,17 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Local working notes, deliberately not published.
+#
+# PROJECT_CONTEXT.md is a session-handoff document: a snapshot taken by
+# reading the tree at one commit, so it starts going stale the moment the
+# next commit lands. CLAUDE.md is the maintained version of the same ground
+# and is the one that ships.
+#
+# THIS REPOSITORY IS PUBLIC. The snapshot carries internal working detail —
+# which GitHub account pushes, how production is deployed, the private
+# design-system dependency. None of it is secret and CLAUDE.md already says
+# as much, but "already exposed" is a poor reason to publish eighty-six more
+# kilobytes of it.
+PROJECT_CONTEXT.md
