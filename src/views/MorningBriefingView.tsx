@@ -13,7 +13,7 @@ import type {
   MorningBriefing,
   Publication,
 } from '../data/types';
-import { PAPER, readableOn } from '../branding/contrast';
+import { AA_LARGE, PAPER, readableOn } from '../branding/contrast';
 import { placementFor, styleOnReport } from '../branding/placement';
 import { reportVars } from '../branding/reportVars';
 import type { ReportSize } from '../branding/types';
@@ -238,13 +238,28 @@ export function MorningBriefingView({
   const style = styleOnReport(placementFor(publication.slug), branding);
   const date = formatDate(sessionDate(briefing.asOf));
 
-  /* The chosen border colour also colours the title and the tables' names,
-     where it reads as text on the white report; else they keep the ink. */
+  /*
+   * ONE ACCENT for every heading on the sheet — the 24px title and the
+   * tables' names — the user's call (2026-10-14: "the net lipi/fipi position
+   * and other headings should follow the same color"). It is the heading
+   * colour, or the border colour where none is chosen, as it was before this
+   * screen had a heading colour of its own.
+   *
+   * THE FLOOR IS 3:1, NOT 4.5. The title is 24px bold, which WCAG counts as
+   * large text, and a brand colour can sit between the two bars: #f26522, the
+   * user's, is 3.15:1 on white. At 4.5 the whole accent was refused and the
+   * headings went black — the defect this replaces. At 3 the colour holds,
+   * and the names, which are 16px and do want 4.5, carry a RECORDED
+   * DEVIATION rather than a silent override: the drawer judges this field at
+   * 4.5 and says so, so the choice is made with the ratio in view. Below 3
+   * the colour is illegible at any size and still falls to ink.
+   */
+  const accent = style.heading ?? style.rule;
   const vars = {
     ...reportVars(style),
     '--report-columns': String(FULL_GRID),
     '--briefing-lead': LEAD[style.size],
-    ...(style.rule ? { '--briefing-accent': readableOn(style.rule, PAPER) } : {}),
+    ...(accent ? { '--briefing-accent': readableOn(accent, PAPER, AA_LARGE) } : {}),
   } as CSSProperties;
 
   /** The sheet; the PDF's copy leaves out the foot's last line, which the page's footer prints. */

@@ -13,8 +13,9 @@
  *   --report-text           the cells' size
  *   --report-rule           the three rules
  *   --report-fill           the filled rows, with --report-on-fill on them
- *   --briefing-accent       the name: the chosen border colour where it
- *                           reads as text, set by the view
+ *   --briefing-accent       the name: the heading colour the sheet's title
+ *                           takes, so every heading reads as one (the user,
+ *                           2026-10-14). Set by the view.
  *
  * Selectors are one step heavier than the theme's (`> thead > tr > th`), so
  * they win on specificity rather than on stylesheet order.

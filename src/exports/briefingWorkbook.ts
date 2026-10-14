@@ -1,6 +1,6 @@
 import { tokens } from '@akseer/ask-analyst-design-system/tokens';
 
-import { PAPER, readableOn, textOn } from '../branding/contrast';
+import { AA_LARGE, PAPER, readableOn, textOn } from '../branding/contrast';
 import { REPORT_SIZES, fontById, type Branding } from '../branding/types';
 import type { MorningBriefing, Publisher } from '../data/types';
 import {
@@ -47,7 +47,7 @@ const STRIPE = color['bg-brand-subtle'];
 const RULE = color['border-brand'];
 
 /** The parts of the Report style a workbook carries. */
-export type BriefingWorkbookStyle = Pick<Branding, 'font' | 'size' | 'rule' | 'fill'>;
+export type BriefingWorkbookStyle = Pick<Branding, 'font' | 'size' | 'rule' | 'fill' | 'heading'>;
 
 /** Signed, and plain zero for anything that rounds to it: the sheet's figures, as Excel formats. */
 const FORMAT = {
@@ -94,9 +94,13 @@ export function buildBriefingWorkbook({
   const stripe = style.fill ?? STRIPE;
   const onStripe = style.fill ? textOn(style.fill).color : INK;
   const rule: XlsxEdge = { style: 'thin', color: style.rule ?? RULE };
-  /* The title and the tables' names: the chosen border colour where it reads
-     as text, as on the sheet; the system's blue for text otherwise. */
-  const accent = style.rule ? readableOn(style.rule, PAPER) : LINK;
+  /* One accent for the title and the tables' names, exactly as the sheet
+     picks it (MorningBriefingView): the heading colour, or the border colour
+     where none is chosen, held to 3:1 — the bar the 24px title has to clear —
+     so a brand colour between 3 and 4.5 is not refused outright. The system's
+     blue for text where neither is set. */
+  const headingColour = style.heading ?? style.rule;
+  const accent = headingColour ? readableOn(headingColour, PAPER, AA_LARGE) : LINK;
 
   const styles = styleRegistry();
   const text = (font: XlsxFont, extra: XlsxStyle = {}) => styles.add({ font: { ...face, ...font }, ...extra });

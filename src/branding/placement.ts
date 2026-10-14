@@ -39,9 +39,14 @@ import { DEFAULT_STYLE, type Branding } from './types';
  *
  *   MORNING BRIEFING offers what its sheet shows (the user: "update it
  *   according to screen"): the logo, the typeface and text size — of the
- *   news and the tables alike — the rules (the title's and the tables'; the
- *   title and the tables' names take the colour too where it reads as text)
- *   and the fill of the tables' striped rows. Its header is the benchmark's —
+ *   news and the tables alike — the rules, the fill of the tables' striped
+ *   rows, and the HEADING COLOUR of the title AND the tables' names, which
+ *   are one colour at the user's ask (2026-10-14). They followed the rule
+ *   colour and had no control of their own; unset, they still do, so an
+ *   untouched report is unchanged. The colour holds at 3:1, the bar the 24px
+ *   title has to clear; the 16px names want 4.5, so the drawer judges this
+ *   field at 4.5 and the shortfall is recorded rather than overridden.
+ *   Its header is the benchmark's —
  *   date, logo, title — with no publisher band, so no company name; no
  *   highlight (no column is current), no negative colour (printed as the
  *   text), no chart and no source line (every story links its own source).
@@ -128,6 +133,12 @@ export interface Placement {
   describe: Readonly<Record<StyleSetting, string>>;
   /** The heading over the report's own fields in the drawer; "Table" where unset. */
   group?: string;
+  /**
+   * This report's title took the BORDER colour before it had a colour of its
+   * own, and still does while none is chosen, so an empty heading field names
+   * the border colour rather than the default blue. The Morning Briefing.
+   */
+  headingFollowsRule?: boolean;
 }
 
 /*
@@ -191,12 +202,14 @@ const PLACEMENTS: Record<string, Placement> = {
     },
   },
   'morning-briefing': {
-    offers: new Set(['logo', 'font', 'size', 'rule', 'fill']),
+    offers: new Set(['logo', 'font', 'size', 'rule', 'fill', 'heading']),
+    headingFollowsRule: true,
     describe: {
       ...EXPLAIN,
       size: 'Sets the size of the news and the tables.',
-      rule: 'Colours the lines and the headings.',
+      rule: 'Colours the lines in the report.',
       fill: 'Fills every other row of the tables.',
+      heading: 'Colours the title and the tables’ names.',
     },
   },
   'ksa/morning-briefing': {

@@ -232,13 +232,16 @@ BOP and Portfolio Investment, a **Chart** heading:
   (BOP): any colour, picked or typed as a
   hex code (`#0A6640`, `0a6640` or `#0a6`). The fill is the letterhead bands
   and header (the header row on Latest Result; the striped rows on the
-  Morning Briefing, whose border colour also colours its title and table
-  names where it reads); the highlight is the latest
+  Morning Briefing, whose title and table names take its HEADING colour, or
+  its border colour while none is chosen, in either case only where they
+  read on white); the highlight is the latest
   period's columns (Portfolio Investment: the Net column; Currency: the USD
   column), and follows the
   fill when empty. Text on a fill switches
   between ink and white for contrast, and the drawer shows the ratio; a
   negatives colour shows how it reads on the white report.
+- **Heading colour** (the Morning Briefing, KSA's Morning Briefing): the
+  report's title, and on the Morning Briefing its tables' names too.
 - **Source** (MTS, BOP, Oil Marketing, Portfolio Investment, Trade-PBS,
   Trade-SBP, Settlement, Remittance, Central Government Debt, Cement,
   Fertilizer, Currency, Auto): replaces the source line under every report.

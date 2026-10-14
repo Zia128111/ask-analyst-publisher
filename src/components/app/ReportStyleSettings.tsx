@@ -717,9 +717,16 @@ export function ReportStyleSettings({
             <ColourField
               label="Heading colour"
               info={explain('heading')}
-              readout="large"
-              fallback={color['text-link']}
-              fallbackName="text blue"
+              /* KSA colours a 30px title alone: large text, 3:1. The
+                 Morning Briefing colours its tables' names too, at 16px, so
+                 it is judged at the 4.5:1 those need — the sheet still shows
+                 a colour that clears only 3, so the readout is how that
+                 deviation stays in view rather than hidden. */
+              readout={where.headingFollowsRule ? 'text' : 'large'}
+              /* Where the title falls back to the border colour, the empty
+                 field names whichever colour that is now. */
+              fallback={(where.headingFollowsRule ? branding.rule : null) ?? color['text-link']}
+              fallbackName={where.headingFollowsRule && branding.rule ? 'the border colour' : 'text blue'}
               value={branding.heading}
               swatches={HEADING_SWATCHES}
               onChange={(heading) => editBranding({ heading })}

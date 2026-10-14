@@ -74,6 +74,11 @@ export const PAPER = tokens.semanticLight['bg-surface'];
  * A chosen text colour where it lands on a fill: kept while it reads there
  * (AA), otherwise the ink or white that fill takes — so a red negative on a
  * dark highlight does not disappear. The parentheses still carry the sign.
+ *
+ * `min` is the ratio to clear, 4.5:1 by default. Pass AA_LARGE for text that
+ * IS large — 24px, or 18.66px bold — or a title is refused a colour that is
+ * perfectly legible at its size (the Morning Briefing's 24px title and its
+ * 16px table names are judged apart for exactly this reason).
  */
-export const readableOn = (text: string, fill: string): string =>
-  contrast(text, fill) >= AA_TEXT ? text : textOn(fill).color;
+export const readableOn = (text: string, fill: string, min: number = AA_TEXT): string =>
+  contrast(text, fill) >= min ? text : textOn(fill).color;

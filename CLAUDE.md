@@ -186,6 +186,21 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   widen it to eight and nine (`--report-columns`). A report about one
   company passes its own `letterhead` instead of the bands
   (`CompanyLetterhead`): same sheet, measure, typeface and source line.
+- **A table's outer edges line up with the letterhead above it** (the user,
+  2026-10-14: "i want padding on table right and left a bit so it matches the
+  start of the company title"). The bands inset their text by space-2, so
+  every table keeps the system's space-2 on its first and last cells and the
+  first label sits under the company name, the last figure under the logo.
+  Six tables had carried a `padding-inline: 0` override for a flush edge
+  (`MonthlyTable`, `ResultTable`, `FlowTable`, `RatesTable`,
+  `SettlementTable`, `TopicTable`); they are gone — MTS never had one, which
+  is why it already read correctly. `TopicTable` is the ONE exception and
+  keeps its flush edges: KSA's letterhead has no band, so its tag and title
+  sit flush at 0 themselves and an inset table would be the thing out of
+  line. The briefing's `MarketTable` is unaffected — its tables are boxes in
+  a side column, not against the sheet's edge. The 16px costs a table that
+  already scrolled 16px more: Portfolio Investment at Inter 18px, the one
+  such case, went 64px over to 80px.
 - **The MTS page fits one screen** (the sheet ends at 838px in a 1920×960
   pane beside the sidebar and under the top bar; 883px under the old row of tabs): the table uses the design system's `data-density="compact"`, and
   where `text-box` is supported, cap-trimmed cells with 8px padding (27px
@@ -241,8 +256,17 @@ Next.js App Router. `app/` holds the routes; everything reusable is in `src/`.
   width follows its proportions; only a logo wider than the box at that
   height (over about 3.7:1) is scaled down to the box's width, proportions
   intact. Never stretch a logo, never let it leave the box on the desktop
-  sheet, and NEVER squeeze the text on the left for it: the bands keep their
-  four columns (`flex: 0 0`), the box never shrinks (`flex: none`). On a
+  sheet, and NEVER squeeze the text on the left for it: four grid columns is
+  the bands' MINIMUM (`min-inline-size`), the box never shrinks
+  (`flex: none`). The bands take only what their longest line needs
+  (`inline-size: fit-content`) and so stop well short of the logo, as in the
+  benchmark — but they widen past four columns rather than wrap a title that
+  will not fit, which is what Fertilizer's did in Inter, Open Sans, IBM Plex
+  and Source Serif (2026-10-14; 437px of title in 404px of band, while 481px
+  of a ten-column sheet stood empty). A wrapped title also breaks
+  `--letterhead-block`, which sizes the logo to a text block of exactly one
+  title line. Four columns is still the width on every other sheet in every
+  face, measured. On a
   sheet too narrow for both, the letterhead wraps the logo ABOVE the bands
   (`wrap-reverse`) at full height; below 640px it stacks. The cap sits on the
   box as well as the image — a flex item sizes from its content and ignores
@@ -299,8 +323,8 @@ recreated from the user's LUCK benchmark:
   (`--letterhead-block` 57.6px), same box rules.
 - **Table** (`ResultTable`): thin rules (header included, unlike MTS),
   tinted header, current quarter and period to date tinted down the table
-  (`current` columns), totals bold, labels start and figures end, flush with
-  the sheet's edges. Negatives in parentheses need `signStyle: 'parens'`:
+  (`current` columns), totals bold, labels start and figures end, a space-2
+  step in from the sheet's edges, as on every table but KSA's (below). Negatives in parentheses need `signStyle: 'parens'`:
   the DS `formatNumber` defaults to a minus despite its comment. Precision
   is a RULE (`src/data/resultPrecision.ts`): amounts 0, changes 1, EPS 2 a
   quarter / 1 to date (the feed rounds FY EPS), DPS 2 — because the feed
@@ -464,7 +488,7 @@ The day's portfolio flows of local (LIPI) and foreign (FIPI) investors
   this page the benchmark's colours as its own defaults. **Every line is one
   line** — labels and the band's "Portfolio Investment" never wrap (the
   user's call: two-line labels "make the table weird"). Measured: every face
-  at every size fits 1300px except Inter at 18px, 64px over, which scrolls
+  at every size fits 1300px except Inter at 18px, 80px over, which scrolls
   in its region on screen and widens its PICTURE by that much (below).
   Letting the name wrap instead was tried and broke the PNG/PDF at 14px: the
   export copy (html-to-image) lays the table out again at 13.9px with every
@@ -584,10 +608,27 @@ The day's briefing — the stories, and the markets of the session before —
   tagline version, on a light plate in dark mode) under the tables. The
   joint venture's furniture, not white-labelled.
 - **Drawer, decided by the screen**: logo, font, text size (news and
-  tables), border colour (the rules; the title and tables' names too where
-  it reads at 4.5:1 on white, else ink: `--briefing-accent`), fill (the
-  striped rows). No company name — the header has no band — no highlight,
-  negative colour, chart or source.
+  tables), border colour (the rules), heading colour (the title AND the
+  tables' names, one colour — the user's ask) and fill (the striped rows).
+  No company name — the header has no band — no highlight, negative colour,
+  chart or source. The heading colour was added 2026-10-14; before it those
+  headings took the BORDER colour, and they still do while none is chosen,
+  so an untouched report is unchanged (`--briefing-accent`, set by the view
+  and by `briefingWorkbook`).
+- **The accent is held to 3:1, not 4.5** — and this is a RECORDED
+  DEVIATION, the second in the product after the design system's own
+  `text-on-brand`. The title is 24px bold, which WCAG counts as large text,
+  so 3:1 is its bar; the tables' names are 16px and want 4.5. A brand colour
+  can sit between the two: the user's #f26522 is 3.15:1 on white. Judging
+  the pair at 4.5 refused the colour outright and printed every heading
+  BLACK (shipped and fixed the same day, 2026-10-14), and judging them apart
+  gave an orange title over black names, which the user rejected — they
+  asked for one colour. So the colour holds, the 16px names carry the
+  shortfall, and the drawer judges this field at 4.5 (`headingFollowsRule`)
+  and says "below the 4.5:1 AA minimum", so the choice is made with the
+  ratio in view rather than silently. Below 3:1 it is illegible at any size
+  and still falls to ink. A publisher who wants the names to pass needs a
+  darker shade — #C2410C is 5.18:1.
 - **Downloads**:
   - PNG: the screen's sheet (2664px wide).
   - PDF: two A4 PORTRAIT pages (`src/exports/briefingPdf.ts`), on the
@@ -1024,8 +1065,8 @@ The State Bank's weighted average exchange rates for six currencies
   the USD column filled with the highlight (or the fill), header frozen at
   row 6. Read back via COM, with a draft highlight too.
 - **Deviations from the benchmark**: the Download menu; 14px text;
-  `formatDate` ("Aug 22, 2025"); labels flush with the sheet's edge (the
-  live page indents "Currency" and the rows 20px); rates at a steady four
+  `formatDate` ("Aug 22, 2025"); labels a space-2 step in from the sheet's
+  edge, where the live page indents "Currency" and the rows 20px; rates at a steady four
   decimals (the live page prints the feed's strings, "39.214", "1.895").
 
 ## Auto (Auto Sales Volumes)
@@ -1095,7 +1136,8 @@ refresh keeps their choice):
   bands and header, as on MTS. Oil Marketing offers what its sheet shows:
   MTS's list plus the highlight. Portfolio Investment likewise: MTS's list,
   the highlight (its main table's Net column) and the bar colour. The
-  Morning Briefing: logo, font, size, border and fill (no company name: its
+  Morning Briefing: logo, font, size, border, the heading colour of its
+  title and its tables' names, and fill (no company name: its
   header has no band); KSA's Morning Briefing only the logo, the heading
   colour and the tag colour, under a "Header" group (the user's list).
   Trade-PBS: MTS's list (its table tints and colours
@@ -1195,7 +1237,7 @@ refresh keeps their choice):
 | Negative figures colour | BOP | negative amounts in the table and the Excel cells; on a highlight, kept only where it reads | any colour; empty = negative red (#B91C1C, the scheme's in dark); ratio on white shown |
 | Bar colour | BOP, Portfolio Investment, Remittance | the chart's bars on screen; Portfolio Investment's and Remittance's Excel charts; Remittance's PNG/PDF | any colour; empty = palette blue (#1485FF); ratio on white shown |
 | Line colour | BOP, Remittance | BOP's fiscal-year line and dots; Remittance's YoY line, in its downloads too | any colour; empty = palette orange (#EA580C); ratio on white shown |
-| Heading colour | KSA's Morning Briefing | its title, on screen and in every download; the workbook's title | any colour; empty = text blue (#0A6FDB, the scheme's in dark); ratio on white against 3:1 (large text) shown |
+| Heading colour | the Morning Briefing, KSA's Morning Briefing | KSA: its title, on screen and in every download, and the workbook's title. The Morning Briefing: its title AND its tables' names, one colour, on the sheet and in the workbook | any colour that reads at 3:1 on white, the bar a large title clears, else ink; empty = text blue (#0A6FDB, the scheme's in dark), or on the Morning Briefing the border colour. Ratio shown against 3:1 for KSA's title, 4.5:1 on the Morning Briefing, whose 16px names want it — a colour between the two prints and is reported as below AA |
 | Tag colour | KSA's Morning Briefing | the KSA tag's fill, ink or white on it; the tag's word in the workbook where it reads on white | any colour; empty follows the heading colour; ratio shown |
 | Source | MTS, BOP, Oil Marketing, Portfolio Investment, Trade-PBS, Trade-SBP, Settlement, Remittance, Central Government Debt, Cement, Fertilizer, Currency, Auto | the source line, on screen and in every download | empty = each report's own |
 
@@ -1231,7 +1273,10 @@ refresh keeps their choice):
   is no hydration mismatch (checked on a clean load).
 - **Measured**: every font at every size at 1920×960 — no table overflow,
   one-line title, sheet bottom at most 952px, so the MTS page still fits one
-  screen. Adding a font = a Fontsource import in `fonts.ts` and an entry in
+  screen. The one-line title is what the bands' `fit-content` width keeps
+  (above): measure a NEW title against 404px, the text four grid columns
+  hold, in all seven faces at 18px bold — over that and the bands widen for
+  it. Adding a font = a Fontsource import in `fonts.ts` and an entry in
   `REPORT_FONTS`, then re-check tabular digits and italics: the design system
   sets `font-synthesis: none`, so a face without italics prints the source
   upright.
