@@ -56,6 +56,13 @@
   white-space: nowrap;
 }
 
+/*
+ * Flush with the sheet's edges, unlike every other report's table, which
+ * keeps the system's space-2 to line up with its letterhead BAND (the user,
+ * 2026-10-14). This sheet has no band: the KSA tag and the title sit flush
+ * at the edge themselves, so an inset table would be the thing out of line.
+ * Measured: tag 0, title 0.
+ */
 .table :is(th, td):first-child {
   padding-inline-start: 0;
 }

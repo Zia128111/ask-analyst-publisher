@@ -98,10 +98,12 @@
   font-weight: 400;
 }
 
-/* The last figures flush with the sheet's edge, under the logo. */
-.table > :is(thead, tbody) > tr > :last-child {
-  padding-inline-end: 0;
-}
+/*
+ * No flush edges: every cell keeps the system's space-2, so the first label
+ * and the last figure line up with the letterhead band's text, which is
+ * inset by the same step (the user, 2026-10-14). MTS always read this way --
+ * its table never carried the override.
+ */
 
 /*
  * The pinned symbols. Opaque, or figures scroll visibly underneath them.
