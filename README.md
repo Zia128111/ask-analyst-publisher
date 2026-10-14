@@ -239,7 +239,7 @@ BOP and Portfolio Investment, a **Chart** heading:
   fill when empty. Text on a fill switches
   between ink and white for contrast, and the drawer shows the ratio; a
   negatives colour shows how it reads on the white report.
-- **Source** (MTS, Oil Marketing, Portfolio Investment, Trade-PBS,
+- **Source** (MTS, BOP, Oil Marketing, Portfolio Investment, Trade-PBS,
   Trade-SBP, Settlement, Remittance, Central Government Debt, Cement,
   Fertilizer, Currency, Auto): replaces the source line under every report.
 - **Bar and line colours** (under Chart): BOP's bars and fiscal-year line,

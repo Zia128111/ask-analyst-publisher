@@ -1089,8 +1089,10 @@ refresh keeps their choice):
   colour = the latest quarter and period to date in every row), the font
   and the text size. BOP offers Latest Result's list plus the company name
   (it has MTS's publisher band; the user asked for it there), the negative
-  figures colour and the chart's bar and line colours (its fill is the
-  bands and header, as on MTS). Oil Marketing offers what its sheet shows:
+  figures colour, the chart's bar and line colours and the source line
+  under its table (added 2026-10-14: the sheet prints one and the drawer
+  could not change it), its fill being the
+  bands and header, as on MTS. Oil Marketing offers what its sheet shows:
   MTS's list plus the highlight. Portfolio Investment likewise: MTS's list,
   the highlight (its main table's Net column) and the bar colour. The
   Morning Briefing: logo, font, size, border and fill (no company name: its
@@ -1195,7 +1197,7 @@ refresh keeps their choice):
 | Line colour | BOP, Remittance | BOP's fiscal-year line and dots; Remittance's YoY line, in its downloads too | any colour; empty = palette orange (#EA580C); ratio on white shown |
 | Heading colour | KSA's Morning Briefing | its title, on screen and in every download; the workbook's title | any colour; empty = text blue (#0A6FDB, the scheme's in dark); ratio on white against 3:1 (large text) shown |
 | Tag colour | KSA's Morning Briefing | the KSA tag's fill, ink or white on it; the tag's word in the workbook where it reads on white | any colour; empty follows the heading colour; ratio shown |
-| Source | MTS, Oil Marketing, Portfolio Investment, Trade-PBS, Trade-SBP, Settlement, Remittance, Central Government Debt, Cement, Fertilizer, Currency, Auto | the source line, on screen and in every download | empty = each report's own |
+| Source | MTS, BOP, Oil Marketing, Portfolio Investment, Trade-PBS, Trade-SBP, Settlement, Remittance, Central Government Debt, Cement, Fertilizer, Currency, Auto | the source line, on screen and in every download | empty = each report's own |
 
 - **"All" in the table** (font, text size, border, fill) means every report
   but KSA's Morning Briefing, whose drawer offers only the logo, the heading

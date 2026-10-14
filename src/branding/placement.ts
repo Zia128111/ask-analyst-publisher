@@ -16,10 +16,12 @@ import { DEFAULT_STYLE, type Branding } from './types';
  *   user's list for this screen. It prints no source line and no publisher
  *   name, whatever another report has set.
  *
- *   BOP offers Latest Result's list and four more, the user's additions:
+ *   BOP offers Latest Result's list and five more, the user's additions:
  *   the company name on its publisher band (it has MTS's letterhead), the
- *   colour of negative figures, and the chart's bar and line colours. Its
- *   fill is the bands and the header, as on MTS.
+ *   colour of negative figures, the chart's bar and line colours, and the
+ *   source line under its table (the user, 2026-10-14: its sheet prints
+ *   one — "SBP, Akseer Research" — and the drawer had no way to change
+ *   it). Its fill is the bands and the header, as on MTS.
  *
  *   OIL MARKETING offers what its screen shows (the user left it to the
  *   screen): MTS's list — company name, logo, typeface, text size, rules,
@@ -161,7 +163,19 @@ const PLACEMENTS: Record<string, Placement> = {
     describe: { ...EXPLAIN, fill: 'Fills the table’s header row.' },
   },
   bop: {
-    offers: new Set(['company', 'logo', 'font', 'size', 'rule', 'fill', 'highlight', 'negative', 'bar', 'line']),
+    offers: new Set([
+      'company',
+      'logo',
+      'font',
+      'size',
+      'rule',
+      'fill',
+      'highlight',
+      'negative',
+      'bar',
+      'line',
+      'source',
+    ]),
     describe: EXPLAIN,
   },
   'oil-marketing': {

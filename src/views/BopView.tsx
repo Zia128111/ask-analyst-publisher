@@ -32,9 +32,9 @@ import layout from './BopView.module.css';
  *
  * THE REPORT STYLE here is what this report offers in the drawer: Latest
  * Result's list — the logo, the border colour, the fills, the typeface, the
- * text size — and the company name on the publisher band, as on MTS, and
- * the colours of the negative figures and of the chart's bars and line
- * (src/branding/placement.ts).
+ * text size — and the company name on the publisher band, as on MTS, the
+ * colours of the negative figures and of the chart's bars and line, and the
+ * source line under the table (src/branding/placement.ts).
  *
  * DOWNLOADS ARE THE TABLE PART ONLY — the letterheaded sheet, not the chart
  * beside it (the user's call). PNG and PDF are pictures of the off-screen
