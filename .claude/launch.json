@@ -4,7 +4,10 @@
     {
       "name": "publisher",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000,
       "autoPort": true
     },
@@ -18,6 +21,15 @@
         "D:/Claude for Design/Ask Analyst New UI/vite.config.ts"
       ],
       "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "../Ask Analyst - Admin/scripts/serve.mjs"
+      ],
+      "port": 4173,
       "autoPort": true
     }
   ]
