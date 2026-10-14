@@ -61,14 +61,28 @@
   padding-block-end: var(--ask-space-2);
 }
 
-/* The bands run four grid columns wide, as in the benchmark, where they stop
-   well short of the logo rather than running into it. */
+/*
+ * The bands run four grid columns wide, as in the benchmark, where they stop
+ * well short of the logo rather than running into it — and WIDER ONLY WHERE A
+ * LINE WOULD OTHERWISE WRAP. Four columns leave 404px of text, which the
+ * titles fit in Lato: Fertilizer's is the longest at 393px. The Report style
+ * offers six other faces, and Inter sets the same title in 437px and Source
+ * Serif in 431px, so it wrapped onto a second line — breaking the one-line
+ * title, and with it `--letterhead-block`, which sizes the logo to a text
+ * block of exactly one title line. A ten-column sheet had 481px standing
+ * empty beside it.
+ *
+ * `fit-content` takes only what the longest line needs, so every sheet whose
+ * title already fits is unchanged; the four columns stay as the MINIMUM, so
+ * the logo never squeezes the text.
+ */
 .publisher {
   display: flex;
   flex-direction: column;
   gap: var(--ask-space-1);
-  flex: 0 0 calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
-  min-inline-size: 0;
+  flex: 0 1 auto;
+  inline-size: fit-content;
+  min-inline-size: calc(var(--ask-grid-column) * 4 + var(--ask-grid-gutter) * 3);
 }
 
 /* The Report style's fill, with ink or white chosen to read on it; the
@@ -139,7 +153,11 @@
     align-items: stretch;
   }
 
+  /* The four-column minimum would be wider than the sheet itself here, and
+     `fit-content` would hold the bands to their text instead of stretching. */
   .publisher {
     flex-basis: auto;
+    inline-size: auto;
+    min-inline-size: 0;
   }
 }
